@@ -1,0 +1,327 @@
+<section class="project-section">
+
+<h2 class="project-section-title">Content</h2>
+
+<div class="project-text">
+    <p>
+        How it works:<br><br>
+        For terrain generation, we use a Perlin Noise texture (see image below) to get a somewhat smooth and random black and white texture.
+    </p>
+</div>
+<div class="media-slot media"><img src="ProceduralGeneration/Images/PerlinNoise.png" width="100%" height="100%"></div>
+<div class="project-text"><p>   
+    We then map each pixel of the texture (x, y) to a world coordinate (x, z) and use the pixel color value (float in the [0, 1] range) and scale it by the max terrain height to determine how high the terrain should go on the associated (x, z).
+    <br>I decided to subtract the values from another perlin with a different scale to make the landscape more irregular.
+    
+</p></div>
+<div><pre><code class="language-csharp">
+for (int x = 0; x < mapData.Width; x++)
+{
+    for (int z = 0; z < mapData.Depth; z++) 
+    {
+        float heightMultiplicator =
+            Mathf.PerlinNoise(
+                firstPerlinOffsetX + scaleFirstPerlin * x / mapData.Width,
+                firstPerlinOffsetY + scaleFirstPerlin * z / mapData.Depth
+            )
+            -
+            Mathf.PerlinNoise(
+                secondPerlinOffsetX + scaleSecondPerlin * x / mapData.Width,
+                secondPerlinOffsetY + scaleSecondPerlin * z / mapData.Depth
+            )
+        ;
+
+        Vector3 position = new Vector3(
+            x,
+            (int)(mapData.Height * heightMultiplicator) + 1,
+            z
+        );
+
+        Instantiate(terrainTilePrefab, position);
+    }
+}
+</code></pre></div>
+<div class="project-text"><p>
+    This code generates a plane with all the topmost tiles. From this point we can fill the tiles beneath with other blocks.
+    The issue is, this would generate thousands of tiles and cause my machine to stutter really hard.
+    <br><br>
+    I opted for the following fix:
+</p></div>
+<div><pre><code class="language-csharp">
+private void SpawnTilesVerticalSlice(Vector3 position)
+{
+    int x = (int)position.x;
+    int z = (int)position.z;
+    float originalY = position.y;
+    
+    mapData.HeightMap[x, z] = (int)Mathf.Max(originalY, 0); // for later use
+    float worldBottom = mapData.BottomMostY;
+
+    float grassTop = originalY;
+    float grassBottom = grassTop - 1f;
+
+    if (grassBottom <= worldBottom) // if too low just ignore
+        return;
+
+    GameObject grass = Instantiate(terrainTilePrefab, parent);
+    grass.transform.position = new Vector3(x, grassTop - 0.5f, z);
+    grass.transform.localScale = new Vector3(1f, 1f, 1f);
+
+    // Hide -> avoid clugging the hierarchy
+    // DontSave -> prevent saving
+    // (why waste storage saving everything
+    // when they can just be loaded by using the same parameters)
+    grass.hideFlags = HideFlags.HideAndDontSave; 
+    
+    // change tile color to simulate grass,
+    // wouldn t suffice in a full game but good enough for the project
+    grass.GetComponent&ltMeshRenderer>().sharedMaterial = grassMaterial; 
+
+    float dirtTop = grassBottom;
+    float dirtBottom = dirtTop - 3f;
+
+    if (dirtTop <= worldBottom) // if too low just ignore
+        return;
+
+    // compute how thick the dirt layer should be to reach the worldBottom
+    float dirtHeight = Mathf.Min(3f, dirtTop - worldBottom);
+
+    GameObject dirt = Instantiate(terrainTilePrefab, parent);
+    dirt.hideFlags = HideFlags.HideAndDontSave;
+
+    // stretch the dirt tile to fill the whole dirt layer
+    // instead of having a dirt object for every y value of the layer
+    dirt.transform.localScale = new Vector3(1f, dirtHeight, 1f);
+    // adjust the position to account for the stretch ()
+    dirt.transform.position = new Vector3(x, dirtTop - dirtHeight * 0.5f, z);
+
+    dirt.GetComponent&ltMeshRenderer>().sharedMaterial = dirtMaterial;
+
+    
+    // fill the remaining height with stone using the same logic
+    float stoneTop = dirtTop - dirtHeight;
+    if (stoneTop <= worldBottom)  // if too low just ignore
+        return;
+
+    float stoneHeight = stoneTop - worldBottom;
+
+    GameObject stone = Instantiate(terrainTilePrefab, parent);
+    stone.hideFlags = HideFlags.HideAndDontSave;
+    stone.transform.position = new Vector3(x, stoneTop - stoneHeight * 0.5f, z);
+    stone.transform.localScale = new Vector3(1f, stoneHeight, 1f);
+    stone.GetComponent&ltMeshRenderer>().sharedMaterial = stoneMaterial;
+}
+</code></pre></div>
+<div class="project-text"><p>
+    <br>
+    This method reduces every vertical slice of the world into up to 3 gameobjects (grass, dirt and stone) greatly reducing the overall object count of the map.
+    This drastically reduces allocations and draw calls and therefore is much more efficient at runtime and much faster to generate.
+
+    This optimization did alleviate a lot of pressure on my machine tho it wasn t still wasn t acceptable for a game.
+    The current slice approach leaves a lot of faces that aren t exposed and just ruin performances for no reason.
+    The fix was to write this simple mesh merger to cut down on the load.
+</p></div>
+<div><pre><code class="language-csharp">
+public static class MeshMerger
+{
+    public static GameObject MergeChildrenMeshes(
+        Transform rootTransform, Action? clearDelegate
+        )
+    {
+        // cache original position. 
+        Vector3 originalPosition = rootTransform.position;
+        // temporarily set to (0,0,0)
+        rootTransform.position = Vector3.zero;
+
+        // map materials to all the mesh filters that uses them;
+        Dictionary&ltMaterial, List&ltMeshFilter>> materialToMeshFilters =
+            new Dictionary&ltMaterial, List&ltMeshFilter>>();
+        List&ltGameObject> combinedObjects = new List&ltGameObject>();
+
+        MeshFilter[] meshFilters = rootTransform.
+            GetComponentsInChildren&ltMeshFilter>();
+
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            if (!meshFilter.gameObject.activeSelf)
+            {
+                Debug.LogWarning("Skipped an object bc wasn t enabled.");
+                continue;
+            }
+
+            if (!meshFilter.TryGetComponent(out MeshRenderer meshRenderer))
+            {
+                Debug.LogWarning(
+                    "Skipped an object bc no meshRenderer attached."
+                );
+                continue;
+            }
+
+            Material material = meshRenderer.sharedMaterial;
+
+            if (!materialToMeshFilters.ContainsKey(material))
+                materialToMeshFilters[material] = new List&ltMeshFilter>();
+            materialToMeshFilters[material].Add(meshFilter);
+        }
+
+        Debug.Log("Gathered all meshfilter data");
+
+        // create one mesh per material
+        foreach (KeyValuePair&ltMaterial, List&ltMeshFilter>> entry 
+            in materialToMeshFilters)
+        {
+            List&ltMeshFilter> meshesWithSameMaterial = entry.Value;
+            string materialName = entry.Key.ToString();
+
+            CombineInstance[] combine =
+                new CombineInstance[meshesWithSameMaterial.Count];
+            for (int i = 0; i < meshesWithSameMaterial.Count; i++)
+            {
+                combine[i].mesh = meshesWithSameMaterial[i].sharedMesh;
+                combine[i].transform = meshesWithSameMaterial[i].
+                    transform.localToWorldMatrix;
+            }
+
+            Mesh resultMesh = new Mesh()
+            {
+                indexFormat = IndexFormat.UInt32
+            };
+            resultMesh.CombineMeshes(combine);
+            MeshUtility.Optimize(resultMesh);
+
+            string gameObjectName = (materialToMeshFilters.Count > 1) ?
+                    $"CombinedMeshes_{materialName}" :
+                    $"CombinedMeshes_{rootTransform.name}"
+            ;
+            GameObject newObject = new GameObject(gameObjectName);
+            newObject.AddComponent&ltMeshFilter>().sharedMesh = resultMesh;
+            newObject.AddComponent&ltMeshRenderer>().sharedMaterial = entry.Key;
+            combinedObjects.Add(newObject);
+        }
+
+        // If there was more than one material
+        // -> multiple GOs created, parent them and work with result
+        GameObject resultGameObject;
+        if (combinedObjects.Count > 1)
+        {
+            resultGameObject = new GameObject(
+                "CombinedMeshes_" + rootTransform.name
+            );
+            foreach (var combinedObject in combinedObjects)
+                combinedObject.transform.parent = resultGameObject.transform;
+        }
+        else
+        {
+            resultGameObject = combinedObjects[0];
+        }
+
+        clearDelegate?.Invoke();
+        rootTransform.transform.position = originalPosition;
+        resultGameObject.transform.position = originalPosition;
+
+        return resultGameObject;
+    }
+}
+</code></pre></div>
+<div class="project-text"><p>
+    This allowed me to tremendously cut down the amount of meshes and make the simulation much faster (can now run without a stutter)<br><br>
+    Now we can move onto making adding water.<br>
+    The approach I chose is using a Simplex noise (see image below) it allows me to get a texture with bigger patches of colors to properly isolate areas based on their color.
+    This noise lets developers generate caves in games such as Minecraft.<br>
+</p></div>
+<div class="media-slot media"><img src="ProceduralGeneration/Images/SimplexNoise.png" width="100%" height="100%"></div>
+<div class="project-text"><p>
+    I used it to create a moisture map and assign a moisture value to each coordinate of the map.
+</p></div>
+<div><pre><code class="language-csharp">
+    SimplexNoise.Noise.Seed = moistureSimplexSeed;
+    mapData.moistureMap = SimplexNoise.Noise.Calc2D(
+        mapData.Width, mapData.Depth, moistureSimplexScale
+    );
+</code></pre></div>
+<div class="project-text"><p>
+    Now i can define coordinates above a certain threshold and at y=0 to be water.
+    This can be done by adding this snippet of code at the top of the SpawnTilesVerticalSlice() method
+</p></div>
+<div><pre><code class="language-csharp">
+float surfaceY = originalY;
+
+if (originalY < 0)
+{
+    if (biome > threshold)
+    {
+        float height = -originalY;   // from 0 to originalY
+        float center = originalY / 2f;
+
+        GameObject water = Instantiate(terrainTilePrefab, parent);
+        water.hideFlags = HideFlags.HideAndDontSave;
+        water.transform.position = new Vector3(x, center, z);
+        water.transform.localScale = new Vector3(1f, height, 1f);
+        water.GetComponent&ltMeshRenderer>().sharedMaterial = waterMaterial;
+
+        surfaceY = originalY;
+        mapData.MapTopMostLayer[x, z] =
+            new MapData.TileData(MapData.TileType.Water);
+    }
+    else
+    {
+        surfaceY = 0;
+        mapData.MapTopMostLayer[x, z] =
+            new MapData.TileData(MapData.TileType.Block);
+    }
+}
+</code></pre></div>
+<div class="project-text"><p>
+    Now I can move onto adding vegetation to the map 
+    The algorithm I chose for this Is called Poisson Disc Sampling.
+    Poisson-disc sampling produces points in a natural pattern based on a specified minimum distance resulting.
+    This lets me generate random points that are never too close from each other and then try placing element at the specified position.
+</p></div>
+<div><pre><code class="language-csharp">
+private void GenerateLandscapeElements() // bushes & trees
+{
+    Random.InitState(landscapeElementsSeed);
+    Vector2 dimensions = new Vector2(mapData.Width, mapData.Depth);
+
+    MapData.TileType tileType;
+    Vector2Int point;
+    // generate a random arrangment of point using
+    // Poisson Disc Sampling algorithm
+    List&ltVector2> pos = PoissonDiscSampling.
+        GeneratePoints(landscapeElemenstSpawnRadius, dimensions);
+    for (int i = 0; i < pos.Count; i++)
+    {
+        point = new Vector2Int(
+            (int)pos[i].x, 
+            (int)pos[i].y
+        );
+        tileType = mapData.MapTopMostLayer[point.x, point.y].TileType;
+        if (tileType == MapData.TileType.Water)
+            continue; // can t place landscape element on water
+
+        if (!AreaIsMostlyFlat(point, landscapeElemenstSpawnRadius, 2))
+            continue; // can t place landscape element on a slope
+
+        float moistureValue = mapData.BiomeDelimitationMap[point.x, point.y];
+        MapData.BiomeData biome =   
+            moistureValue > mapData.moistureForWetBiome ?
+                mapData.WetBiome :
+                mapData.DryBiome
+        ;
+
+        Instantiate(
+            // pick a random landscape elements from the biome
+            biome.LandscapeElements[
+                Random.Range(0, biome.LandscapeElements.Count)
+            ],
+            new Vector3(point.x, mapData.HeightMap[point.x, point.y], point.y),
+            Quaternion.Euler(0, Random.value * 360, 0),
+            transform
+        ).hideFlags = HideFlags.HideAndDontSave;
+    }
+}
+</code></pre></div>
+<div class="project-text"><p>
+    This was only a simplified, condensed overview of how I generated basic terrain using only code and if you want to dive deeper into it you can look at the code in the repository below or I d be happy to talk about it.
+</p></div>
+</section>

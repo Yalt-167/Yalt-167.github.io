@@ -1,0 +1,643 @@
+<section class="project-section">
+
+<h2 class="project-section-title">Content</h2>
+
+<div class="project-text">
+    <p>
+        How it works:<br><br>
+        This project is a real-time multiplayer Tic Tac Toe game written in C++ using SFML for rendering and input handling,
+        WinSock2 for networking, and ImGUI for the in-game interface and chat system.
+        The application uses a client/server architecture where players connect to a central server that synchronizes
+        the game state and relays chat messages between connected clients.
+    </p>
+</div>
+
+<div class="media-slot media">
+    <img src="MultiplayerTicTacToe/Images/Architecture.png" alt="MultiplayerTicTacToe/Images/TicTacToeArchitecture.png" height="100%">
+</div>
+
+<div class="project-text">
+    <p>
+        The architecture is separated into multiple layers to keep rendering, networking, packet serialization,
+        and gameplay logic independent from one another.
+        This structure makes the networking code easier to maintain and allows the server to validate
+        game actions before broadcasting updates to clients.
+    </p>
+</div>
+
+<!-- Socket.hpp -->
+<div><pre><code class="language-cpp">
+// Socket.hpp
+
+class Socket
+{
+public:
+    Socket();
+    ~Socket();
+protected:
+    void InitWSA();
+
+    void Cleanup() const;
+public:
+    virtual void Run() = 0;
+
+protected:
+    SOCKET socket_;
+    WSADATA wsaData; // contains infos about WIndows sockets impl
+    sockaddr_in serverAddr = sockaddr_in();
+    // for specifying IPv4 socket addresses && protocols
+
+    ::Packet header;
+    char headerBuffer[sizeof(Packet)];
+};
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        The Socket layer acts as a low-level abstraction over WinSock2 sockets.
+        It centralizes connection handling, sending and receiving data, and resource cleanup.
+        This avoids duplicating networking code between the client and server implementations.
+    </p>
+</div>
+
+<!-- PacketTypes.hpp & Packet.hpp -->
+<div><pre><code class="language-cpp">
+// PacketTypes.hpp
+
+enum class PacketType
+{
+	Disconnection, // packet associated => none
+	Play, // packet associated => int[1]
+	// &ltint: slot>
+	PlayResult, // packet associated => int[3]
+	// {
+	// &ltint: the play itself>
+	// &ltint: wether u can play>,
+	// &ltint: who played>
+	// }
+	ChatMessage, // packet associated => char[sizeSpecifiedInHeader]
+	// &ltchar*, the message>
+	CatchupPacket, // packet associated => int[9]
+	// basically the grid state if u got disconnected
+};
+
+// Packet.hpp
+
+struct Packet
+{
+public:
+	::PacketType PacketType;
+	int Size;
+
+	// returns self as char* (basically self but serialized)
+	char* Set(const ::PacketType packetType, const  int size)
+	{
+		PacketType = packetType;
+		Size = size;
+
+		return reinterpret_cast&ltchar*>(this);
+	}
+
+};
+
+
+// packets constructed as such:
+// send packets two by two
+
+// header
+// &ltwhat>&ltsize> -> &ltPacketHeader, int>
+// could easily infer size from header if it wasn t for chat msgs
+
+// then body
+// &ltbody> -> &ltchar[&ltheader.Size>]>
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Communication between the server and clients is handled through packets.
+        Each packet contains a small header describing the packet type and payload size,
+        allowing the receiver to correctly deserialize incoming data.
+        This packet-based approach makes the protocol scalable and easier to extend with new features.
+    </p>
+</div>
+
+<!-- GameClient.hpp & ClientSocket.hpp -->
+<div><pre><code class="language-cpp">
+// GameClient.hpp
+
+class GameClient : public Game
+{
+public:
+	GameClient();
+	~GameClient();
+
+	static void HandlePlayResult(
+            const int play, const bool canPlay, const int symbol
+        );
+	
+private:
+	void Run() override;
+
+	void Play();
+	void Render() const;
+	void Chat();
+
+	int GatherInput() const;
+
+	static ::GameClient* instance;
+	class ::ClientSocket* clientSocket = nullptr;
+	std::string userName;
+
+	bool canPlay = false;
+	bool shouldRun = true;
+	
+	std::vector&ltstd::string> chatMessages;
+
+	class ::Window* window = nullptr;
+	class ::Grid* grid;
+};
+
+// ClientSocket.hpp
+
+class ClientSocket : public Socket
+{
+public:
+    ClientSocket(
+        const std::string& userName_, std::vector&ltstd::string>* chatMessages_
+    );
+    ~ClientSocket();
+private:
+    void Init();
+public:
+    void Run() override;
+
+    // no need to provide target
+    // client can only send to server
+    void Send(const char* data, const ::PacketType what, const  int size);
+private:
+    void WriteToChat();
+    void Listen();
+
+    void HandleChatMessage(const int bufferSize);
+    void HandlePlayResult();
+    void HandleCatchupPacket();
+
+    std::string userName;
+    std::vector&ltstd::string>* chatMessages;
+    std::thread* listenerThread;
+};
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        The client handles player input, board rendering, and chat interactions.
+        SFML is used to process mouse and keyboard events while ImGUI is responsible
+        for rendering the in-game chat and debugging interface.
+        The client serializes user actions into packets and sends them to the server.
+    </p>
+</div>
+
+<!-- GameResult.hpp & GameServer.hpp & ServerSocket.hpp-->
+<div><pre><code class="language-cpp">
+// GameResult.hpp    
+enum class GameResult
+{
+    None,
+    PlayerZeroWon,
+    PlayerOneWon,
+    Draw,
+};
+    
+// GameServer.hpp
+
+class GameServer : public Game
+{
+public:
+	GameServer(bool doLogEveryPacket_);
+	~GameServer();
+
+	void Run() override;
+
+	// returns wether game ended
+	static void ParsePlay(
+        const int play,
+        int returnBuffer[3],
+        const int clientNumber
+    );
+	static void EndGame(
+        const ::GameResult gameResult,
+        const int clientNumber
+    );
+	bool CheckPlay(const int play, const int clientNumber);
+	static void RestoreChatMessages(const int clientIndex);
+	static void StoreChatMessage(const std::string& msg);
+
+	static bool LogEveryPacket;
+private:
+	static ::GameServer* instance;
+	int playerTurn = 0;
+	class ::Grid* gameGrid = nullptr;
+	::ServerSocket serverSocket;
+	std::thread* connectionThread = nullptr;
+	int startupPacket[3];
+	int score[2]{ 0, 0 };
+	char gridState[9];
+	std::vector&ltstd::string> chatLogs;
+};
+
+// PacketSendTarget.hpp
+
+enum class PacketSendTarget
+{
+	Client0,
+	Client1,
+	Broadcast,
+};
+
+// ServerSocket.hpp
+
+class ServerSocket : public Socket
+{
+public:
+    ServerSocket();
+    ~ServerSocket();
+    void Run() override;
+
+    int GetConnectedClientsCount() const;
+
+    void Send(
+        const char* data,
+        const ::PacketType what, const int size, 
+        const ::PacketSendTarget target
+    );
+private:
+    void Init();
+
+    std::unordered_map&ltint, std::thread> clientThreads;
+    std::unordered_map&ltint, SOCKET> clientSockets;
+    int connectedClients = 0;
+    std::vector&ltint> freeClientIDs{ 0, 1 };
+
+    void HandleClient(
+        SOCKET& clientSocket,
+        const char* name,
+        const int clientNumber
+    );
+
+    void HandleChatMessage(
+        SOCKET& clientSocket,
+        const int clientNumber,
+        const int messageSize
+    );
+    void HandlePlay(
+        SOCKET& clientSocket,
+        const int clientNumber
+    );
+    void HandleDisconnection(
+        SOCKET& clientSocket,
+        const std::string& name,
+        const int clientNumber
+    );
+};
+</code></pre></div>
+<div class="project-text"><p>
+    The client and server can now communicate by sending packets as such.
+</p></div>
+<div><pre><code class="language-cpp">
+void ServerSocket::Send(
+    const char* data, const PacketType what, const int size,
+    const PacketSendTarget target
+    )
+{
+    if (target == PacketSendTarget::Broadcast)
+    {
+        for (auto& [__, socket] : clientSockets)
+        {
+            _ = send(socket, header.Set(what, size), sizeof(Packet), 0);
+
+            _ = send(socket, data, size, 0);
+        }
+    }
+    else
+    {
+        _ = send(
+            clientSockets[static_cast&ltint>(target)],
+            header.Set(what, size), sizeof(Packet),
+            0
+        );
+
+        _ = send(
+            clientSockets[static_cast&ltint>(target)],
+            data, size,
+            0
+        );
+    }
+}
+// clientSocket only sends to the server socket but the logic remains the same
+</code></pre></div>
+
+<div class="project-text"><p>
+    The entry point is Game::Run() which is overriden in both GameServer and GameClient. Which one you call actually defines your role.
+    GameServer opens a connection for two clients and handle game flow from there.
+</p></div>
+
+<div><pre><code class="language-cpp">
+#define AwaitMilliseconds(ms) \
+	std::this_thread::sleep_for( \
+		std::chrono::milliseconds(ms) \
+	)
+
+void GameServer::Run()
+{
+    // this thread keeps listening for incoming connection
+    // for the entire lifetime of the server
+	connectionThread = new std::thread(&ServerSocket::Run, serverSocket);
+
+    // await one connection to actually start a session
+	while (serverSocket.GetConnectedClientsCount() < 1) // await one player
+        // wait a bit to avoid putting unnecessary load on the CPU
+        // otherwise it would compute
+        // serverSocket.GetConnectedClientsCount() < 1
+        // in a loop as fast as possible
+		AwaitMilliseconds(500);
+
+	std::cout << "Awaiting one more player to start the game..."
+            << std::endl;
+
+    // while at least one player is connected keep the session alive
+	while (serverSocket.GetConnectedClientsCount() > 0)
+	{
+        // if awaiting a player
+		if (serverSocket.GetConnectedClientsCount() < 2) 
+		{
+            // again: avoid frying CPU
+			AwaitMilliseconds(500);
+			continue;
+		}
+
+        // runs once everytime we reach two players
+
+        // sends the grid to everyone (useful for reconnection)
+		serverSocket.Send(
+			Grid::Serialize(gridState),
+			PacketType::CatchupPacket,
+			sizeof(char) * 9,
+			PacketSendTarget::Broadcast
+		);
+
+        // send to each client wether its their turn
+		for (int i = 0; i < 2; i++) // loop over clients
+		{
+            // wether that client has the turn
+			startupPacket[1] = static_cast&ltint>(i == playerTurn); 
+			serverSocket.Send(
+				reinterpret_cast&ltchar*>(startupPacket),
+				PacketType::PlayResult, sizeof(int) * 3,
+				static_cast&ltPacketSendTarget>(i)
+			);
+		}
+
+        // await a disconnection
+		while (serverSocket.GetConnectedClientsCount() == 2)
+            // still avoid toasting CPU
+			AwaitMilliseconds(500); // await !players
+
+		std::cout << "Awaiting another player to continue the game"
+                << std::endl;
+	}
+    // no more player connected -> end session
+	std::cout << "No more player connected. Shutting down the server" 
+            << std::endl;
+}
+
+// here s how the server socket handles connections
+void ServerSocket::Run()
+{
+    sockaddr_in clientAddr;
+    int addrLen = sizeof(clientAddr);
+    while (true)
+    {
+        while (connectedClients == 2)
+            AwaitMilliseconds(500); // no roasting CPU
+
+        // accept() is blocking and block execution
+        // until it actually receives a connection to accept
+        SOCKET clientSocket = accept(socket_, (sockaddr*)&clientAddr, &addrLen);
+        
+        // self explanitory
+        if (clientSocket == INVALID_SOCKET)
+        {
+            std::cerr << "Failed to accept client" << std::endl;
+            continue;
+        }
+
+        // if the connection failed and received invalid packet
+        if (recv(clientSocket, headerBuffer, sizeof(Packet), 0) <= 0)
+        {
+            std::cerr << "Gone too soon" << std::endl;
+            continue;
+        }
+        
+        // receive the new player name
+        // (packet with the size + packet with actual data)
+        int nameSize = reinterpret_cast&ltint*>(headerBuffer)[1] + 1;
+        char* nameBuffer = new char[nameSize];
+
+        _ = recv(clientSocket, nameBuffer, nameSize, 0);
+        
+        // assign the first free index to the client
+        int clientIndex = freeClientIDs[0];
+        freeClientIDs.erase(freeClientIDs.begin());
+
+        std::cout << nameBuffer << " connected" << std::endl;
+        connectedClients++;
+
+        // leave the connection handling to a thread
+        // to avoid blocking execution here
+        clientSockets[clientIndex] = clientSocket;
+        clientThreads[clientIndex] = std::thread(
+            &ServerSocket::HandleClient, this,
+            clientSocket, nameBuffer, clientIndex
+        );
+        clientThreads[clientIndex].detach();
+    }
+}
+
+void ServerSocket::HandleClient(
+    SOCKET clientSocket, const char* name, const int clientNumber
+    )
+{
+    // restore chat history
+    // in case its a reconnection
+    // if not the chat log are probably empty
+    // unless the other player s been having a party by himself
+    GameServer::RestoreChatMessages(clientNumber);
+
+    std::string loginLog = "[Server]: " + std::string(name) + " connected";
+    GameServer::StoreChatMessage(loginLog);
+    Send(
+        loginLog.c_str(),
+        PacketType::ChatMessage,
+        static_cast&ltint>(loginLog.size()) + 1,
+        PacketSendTarget::Broadcast
+    );
+
+    char headerBuffer[sizeof(Packet)];
+    bool socketOpen = true;
+    while (socketOpen)
+    {
+        if (recv(clientSocket, headerBuffer, sizeof(Packet), 0) <= 0)
+        {
+            std::cout << "[" << name << "] disconnected" << std::endl;
+            break;
+        }
+
+        Packet header = *reinterpret_cast&ltPacket*>(headerBuffer);
+
+        if (GameServer::LogEveryPacket)
+        {
+            std::cout
+                << "Got " << Packet::LegiblePacketType(header.PacketType)
+                << " packet from [" << name
+                << "] || Size: " << header.Size
+                << std::endl;
+        }
+
+        // server socket forwards the packet to the appropriate method
+        // (determined based on its header)
+        switch (header.PacketType)
+        {
+            case PacketType::Disconnection:
+                HandleDisconnection(clientSocket, name, clientNumber);
+                socketOpen = false;
+                break;
+
+            case PacketType::ChatMessage:
+                HandleChatMessage(clientSocket, clientNumber, header.Size);
+                break;
+
+            case PacketType::Play:
+                HandlePlay(clientSocket, clientNumber);
+                break;
+        }
+    }
+    
+    delete[] name;
+    
+    clientThreads.erase(clientNumber);
+    clientSockets.erase(clientNumber);
+
+    _ = closesocket(clientSocket);
+
+    freeClientIDs.push_back(clientNumber);
+    connectedClients--;
+}
+</code></pre></div>
+<div class="project-text">
+    <p>
+        Now the player can connect.
+    </p>
+</div>
+<div><pre><code class="language-cpp">
+void GameClient::Run()
+{
+	ImGUI::SFML::Init(*window->RenderWindow);
+
+	if (PickUsername())
+		return;
+
+	clientSocket = new ClientSocket(userName, &chatMessages);
+	clientSocket->Run();
+
+
+	while (shouldRun)
+	{
+		Play();
+		Chat();
+		Render();
+	}
+}
+
+void GameClient::Play()
+{
+	const int play = GatherInput();
+
+	if (play == QUIT)
+	{
+		clientSocket->Send(
+			reinterpret_cast&ltconst char*>(&QUIT),
+			PacketType::Disconnection,
+			sizeof(int)
+		);
+
+		shouldRun = false;
+		return;
+	}
+
+	if (play != INVALID_PLAY && canPlay)
+		clientSocket->Send(
+            reinterpret_cast&ltconst char*>(&play),
+            PacketType::Play, sizeof(int)
+        );
+}
+
+void GameClient::Chat()
+{
+	ImGUI::SFML::Update(*window->RenderWindow, sf::Time());
+
+	ImGUI::Begin("Chat Window", nullptr, ImGuiWindowFlags_NoMove);
+	ImGUI::SetWindowPos(ImVec2(620, 10));
+
+	ImGui::BeginChild("ChatBox", ImVec2(250, 520), true);
+
+	// Display all the chat messages
+	for (const auto& message : chatMessages)
+		ImGui::TextWrapped("%s", message.c_str());
+
+	ImGui::EndChild();
+
+	// Input box to enter new chat message
+	static char inputText[256] = "";
+	if (
+        ImGui::InputText(
+            "##ChatInput",
+            inputText,
+            IM_ARRAYSIZE(inputText),
+            ImGuiInputTextFlags_EnterReturnsTrue)
+        )
+	{
+		if (strlen(inputText) > 0)
+		{
+			std::string msg = 
+                "[" + userName + "]: " + std::string(inputText);
+			// Add the new message to the chat
+			chatMessages.push_back(msg);
+			clientSocket->Send(
+                msg.c_str(),
+                PacketType::ChatMessage,
+                static_cast&ltint>(msg.length()) + 1
+            );
+		}
+		// Clear the input field after sending the message
+		inputText[0] = '\0';
+	}
+
+	ImGUI::End();
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        The server is authoritative and validates(or invalidates) every move received from clients.
+        Once validated, updates are broadcast to all connected players to keep the board synchronized.
+        The same system is also used for the in-game chat, ensuring reliable message delivery between clients.
+        Separating the networking layer (sockets) from gameplay logic makes the project easier to extend into larger multiplayer games in the future.
+        In this project GameClient wraps the client socket while GameServer wraps the server socket. The actual network code could be taken out of the project and used in another by just replacing the GameServer and GameClient which hold the logic.
+        The ClientSocket and GameServer have no knowledge of (and therefore no dependency to) the game logic<br><br>
+    </p>
+    <p>
+    Here is a simplified, condensed overview of how I created a multiplayer tic-tac-toe game with a robust architecture using only C++. If you’d like to learn more, you can check out the code in the repository below, or I’d be happy to discuss it with you.
+    </p>
+</div>
+
+</section>

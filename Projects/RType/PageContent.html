@@ -1,0 +1,161 @@
+<section class="project-section">
+
+<h2 class="project-section-title">Content</h2>
+
+<div class="project-text">
+    <p>
+        How it works:<br><br>
+        This school project is a recreation of the classic R-Type game written in C
+        using SFML for rendering, input handling, audio, and networking.
+
+        As a first C project, the objective was to learn low-level
+        game programming concepts while respecting overly strict coding constraints
+        such as a maximum of 5 functions per file, 30 lines per function,
+        and 80 characters per line.<br><br>
+    </p>
+</div>
+
+<div class="media-slot media">
+    <img src="MultiplayerTicTacToe/Images/Architecture.png" alt="MultiplayerTicTacToe/Images/Architecture.png" height="100%">
+</div>
+
+<div class="project-text">
+    <p>
+        Let s start at the entry point of the program: int main(int argc, char* argv[]).
+        We first initialize SDL and put all the SDL related data into a struct.
+        We then initialize the GameArgs struct which holds every core elements of the game (SDL data, levels and game state).
+    </p>
+</div>
+
+<div><pre><code class="language-c">
+SDL sdlStruct = StartSDL();
+Scene* Levels = CreateLevels(LEVEL_COUNT, sdlStruct);
+GameArgs gameArgs = { sdlStruct, InitGameState(sdlStruct),
+    Levels, CreateBoss(sdlStruct.Tex.Boss) };
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        We can now move onto the start menu which let the user choose the player count and the keybinds
+    </p>
+</div>
+<div><pre><code class="language-c">
+static void DrawStartMenu(SDL sdl, Button buttons[4])
+{
+    char* Ti[] = { "SOLO", "DUO", "REBIND", "QUIT" };
+    SDL_RenderCopy(sdl.renderer, sdl.Tex.TitleScreen, NULL, NULL);
+
+    for (int i = 0; i < 4; i++) {
+        DrawButton(sdl.renderer, buttons[i]);   
+        RenderText(sdl, Ti[i], DONT_RENDER_FLAG,
+            buttons[i].Rect.x + buttons[i].Rect.w / 2,
+            buttons[i].Rect.y + buttons[i].Rect.h / 2);
+    }
+
+    SDL_RenderPresent(sdl.renderer);
+}
+
+static bool HandleStartMenu(GameArgs gameArgs, Button buttons[4], int* pCount)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT) return false;
+        else if (event.type == SDL_MOUSEBUTTONDOWN)
+        {
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+            for (int i = 0; i < 4; i++) {
+                if (PointInRect(mouseX, mouseY, buttons[i].Rect)) {
+                    switch (i) {
+                        case 0:
+                            *pCount = 1;
+                            return false;
+                        case 1:
+                            *pCount = 2;
+                            return false;
+                        case 2:
+                            RemapMenu(gameArgs);
+                            break;
+                        case 3:
+                            SDL_Quit();
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+int StartMenu(GameArgs gameArgs)
+{
+    Button buttons[4];
+    CreateButtons(buttons, gameArgs.SDL);
+
+    int playerCount = 0;
+    bool continue_ = true;
+    while (continue_)
+    {
+        DrawStartMenu(gameArgs.SDL, buttons);
+        continue_ = HandleStartMenu(gameArgs, buttons, &playerCount);
+    }
+    return playerCount;
+}
+
+</code></pre></div>
+
+	int playerCount = StartMenu(gameArgs);
+	Tick(&gameArgs.State);
+	PlaySound(SONG, gameArgs.SDL);
+
+	for (int i = 0; i < LEVEL_COUNT; i++) {
+		gameArgs.State.CurLVL = i + 1;
+		if (playerCount == 1) gameArgs.Levels[i].Players[1].Active = false;
+		gameArgs.Levels[i].Time = gameArgs.State.CurrentTime;
+		int endGame;
+		while (gameArgs.State.Continue) {
+			Tick(&gameArgs.State);
+
+			HandleInputs(&gameArgs);
+			Update(&gameArgs, &gameArgs.Levels[i]);
+			Draw(&gameArgs, gameArgs.Levels[i]);
+			SDL_Delay(FRAMERATE);
+
+			endGame = CheckEndGame(gameArgs, gameArgs.Levels[i]);
+			if (endGame > 0) { break; }
+			else if (endGame < 0) { gameArgs.State.Continue = false; }
+		}
+	}
+
+	return EndScreen(gameArgs);
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        
+    </p>
+</div>
+
+
+<div class="project-text">
+    <p>
+        
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        The server is authoritative and validates(or invalidates) every move received from clients.
+        Once validated, updates are broadcast to all connected players to keep the board synchronized.
+        The same system is also used for the in-game chat, ensuring reliable message delivery between clients.
+        Separating the networking layer (sockets) from gameplay logic makes the project easier to extend into larger multiplayer games in the future.
+        In this project GameClient wraps the client socket while GameServer wraps the server socket. The actual network code could be taken out of the project and used in another by just replacing the GameServer and GameClient which hold the logic.
+        The ClientSocket and GameServer have no knowledge of (and therefore no dependency to) the game logic<br><br>
+    </p>
+    <p>
+    This was only a simplified, condensed overview of how I created a multiplayer tic-tac-toe game with a robust architecture using only C++. If you’d like to learn more, you can check out the code in the repository below, or I’d be happy to discuss it with you.
+    </p>
+</div>
+
+</section>

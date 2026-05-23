@@ -1,9 +1,45 @@
 <!DOCTYPE html>
-<html>
 <head>
-    <title>My Site</title>
+    <link rel="stylesheet" href="Style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Hello from GitHub Pages</h1>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="todo">{{{name}}}</h1>
+                <h2>Gameplay Programmer / Engine Developer</h2>
+                <p>
+                    Gameplay Programmer / Engine Developer focused on building <b>performant</b> and <b>immersive</b> real-time systems and engaging gameplay features.<br><br>
+
+                    Experienced with <b>Unity</b>, <b>Unreal Engine</b>, and low-level languages, I have a strong interest in understanding engine-level behavior and <b>memory/performance tradeoffs</b>.
+                    I am passionate about developing <b>efficient</b> and <b>scalable</b> systems for high-performance, reliable software.<br><br>
+                    
+                    Strong <b>communication</b> and <b>problem-solving</b> skills with the ability to collaborate effectively.
+                </p>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <h2 class="section-title">Featured Projects</h2>
+
+            <div id="projectsGrid", class="projects-grid"></div>
+        </section>
+
+        <section class="contact-section">
+            <h2>Contact</h2>
+            <div class="contact-links">
+                <a href="https://github.com/Yalt-167" target="_blank">GitHub</a>
+                <a href="https://linkedin.com/in/{linkedinName}" target="_blank" class="todo">LinkedIn(TODO)</a>
+                <a href="mailto:{email}" class="todo">Email (TODO)</a>
+            </div>
+        </section>
+    </main>
+    <script src="Data.js"></script> 
+    <script src="BuildProjectCardsGrid.js"></script> 
 </body>
-</html>
+</html> 

@@ -1,0 +1,200 @@
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
+
+
+<div id="editorTabs" class="editor-tabs"><div class="tab-strip" role="tablist">
+    <button role="tab" aria-selected="true" aria-controls="tab-0" class="tab-btn active">
+      <span class="tab-icon">#</span>
+      <span class="tab-name">Lobby Management</span>
+    </button>
+    <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
+      <span class="tab-icon">#</span>
+      <span class="tab-name">Matchmaking</span>
+    </button>
+</div></div>
+
+<br>
+
+<div class="tab-panel" id="tab-0" role="tabpanel">
+    
+<div class="project-text">
+    <p>
+        Multiplayer lobby system built with Unity Lobby, Relay and Netcode for GameObjects. 
+        The architecture centralizes all matchmaking logic inside a single 
+        LobbyHandler singleton to keep UI, relay setup and lobby synchronization coordinated.
+    </p>
+</div>
+
+<div class="media-slot todo-media">
+    <img src="images/lobby-overview.png"  alt="images/lobby-overview.png" width="100%" height="100%">
+</div>
+
+<div><pre><code class="language-csharp">
+public sealed class LobbyHandler : MonoBehaviour
+{
+    public static LobbyHandler Instance { get; private set; }
+
+    private Lobby hostLobby;
+    private Player localPlayer;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        A Singleton pattern is used so every gameplay or UI system can access lobby state 
+        without repeatedly searching scene references. The class is marked sealed to prevent 
+        unintended inheritance on a critical networking manager.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Unity Authentication is initialized asynchronously before any matchmaking operation. 
+        Sign-in callbacks keep the local session state synchronized with Unity Services events.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+await UnityServices.InitializeAsync();
+
+AuthenticationService.Instance.SignedIn += SignInCallback;
+AuthenticationService.Instance.SignInFailed += SignInFailedCallback;
+</code></pre></div>
+
+<div class="media-slot todo-media">
+    <img src="images/authentication-flow.png" width="100%" height="100%">
+</div>
+
+<div class="project-text">
+    <p>
+        Lobby metadata uses indexed DataObjects so matchmaking filters remain server-side 
+        and scalable. Game mode, map and region can be queried efficiently without downloading 
+        every lobby.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+Data = new Dictionary&lt;string, DataObject&gt;()
+{
+    {
+        LobbyData.GameMode,
+        new DataObject(
+            visibility: DataObject.VisibilityOptions.Public,
+            value: gamemode,
+            index: FiltersValues.GameMode
+        )
+    }
+};
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Heartbeat and polling systems run independently to keep lobbies alive while minimizing 
+        unnecessary requests. Timers are updated manually instead of relying on coroutines for 
+        tighter control over network refresh rates.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+private async void HandleHeartbeat()
+{
+    if (!IsLobbyHost())
+        return;
+
+    heartbeatTimer += Time.deltaTime;
+
+    if (heartbeatTimer >= heartbeat)
+    {
+        heartbeatTimer = 0f;
+        await LobbyService.Instance.SendHeartbeatPingAsync(hostLobby.Id);
+    }
+}
+</code></pre></div>
+
+<div class="media-slot todo-media">
+    <img src="images/lobby-refresh-loop.png" width="100%" height="100%">
+</div>
+
+<div class="project-text">
+    <p>
+        Relay and local transports are abstracted behind dedicated selection methods. 
+        This allows the same gameplay code to run either through Unity Relay or local LAN 
+        testing without changing higher-level systems.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public void SelectRelayUnityTransport()
+{
+    DisableLocalUnityTransport();
+
+    NetworkManager.Singleton.NetworkConfig.NetworkTransport = relayUnityTransport;
+
+    EnableRelayUnityTransport();
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        The UI is fully generated with IMGUI to allow rapid iteration during multiplayer 
+        development. Menus dynamically switch between signed-out, lobby browsing, hosting 
+        and in-lobby states using centralized rendering logic.
+    </p>
+</div>
+
+<div class="media-slot todo-media">
+    <img src="images/lobby-ui.png" width="100%" height="100%">
+</div>
+
+<div><pre><code class="language-csharp">
+if (IsInLobby())
+{
+    DisplayCurrentLobbyMenu();
+}
+else
+{
+    CreateLobbyMenu();
+    JoinLobbyMenu();
+    DisplayAvailableLobbiesMenu();
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Reflection is used to automatically populate dropdowns from static game data classes. 
+        This removes duplicated UI configuration and keeps menus synchronized with gameplay enums.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
+
+for (int i = 0; i < fields.Length; i++)
+    dropDown.Options[i] = (string)fields[i].GetValue(null);
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Extensive validation and permission checks are performed before every lobby action 
+        to prevent invalid states such as unauthorized host actions, missing IDs or malformed passwords.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+if (!IsLobbyHost())
+{
+    Debug.Log("You don t have permission for this");
+    return;
+}
+</code></pre></div>
+
+</div>
+
+<div class="tab-panel" id="tab-1" role="tabpanel" hidden>
+...
+</div>
+
+</div>
+
+<script src="HandleTabs.js"></script>
+</section>
