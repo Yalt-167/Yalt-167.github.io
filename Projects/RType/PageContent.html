@@ -16,7 +16,11 @@
 </div>
 
 <div class="media-slot media">
-    <img src="MultiplayerTicTacToe/Images/Architecture.png" alt="MultiplayerTicTacToe/Images/Architecture.png" height="100%">
+    <img
+        src="MultiplayerTicTacToe/Images/Architecture.png"
+        alt="MultiplayerTicTacToe/Images/Architecture.png"
+        height="100%"
+    >
 </div>
 
 <div class="project-text">
@@ -40,14 +44,13 @@ GameArgs gameArgs = { sdlStruct, InitGameState(sdlStruct),
     </p>
 </div>
 <div><pre><code class="language-c">
-static void DrawStartMenu(SDL sdl, Button buttons[4])
+static void DrawStartMenu(SDL sdl, Button buttons[4], char* texts[4])
 {
-    char* Ti[] = { "SOLO", "DUO", "REBIND", "QUIT" };
     SDL_RenderCopy(sdl.renderer, sdl.Tex.TitleScreen, NULL, NULL);
 
     for (int i = 0; i < 4; i++) {
         DrawButton(sdl.renderer, buttons[i]);   
-        RenderText(sdl, Ti[i], DONT_RENDER_FLAG,
+        RenderText(sdl, texts[i], DONT_RENDER_FLAG,
             buttons[i].Rect.x + buttons[i].Rect.w / 2,
             buttons[i].Rect.y + buttons[i].Rect.h / 2);
     }
@@ -92,12 +95,13 @@ int StartMenu(GameArgs gameArgs)
 {
     Button buttons[4];
     CreateButtons(buttons, gameArgs.SDL);
+    char* texts[4] = { "SOLO", "DUO", "REBIND", "QUIT" };
 
     int playerCount = 0;
     bool continue_ = true;
     while (continue_)
     {
-        DrawStartMenu(gameArgs.SDL, buttons);
+        DrawStartMenu(gameArgs.SDL, buttons, texts);
         continue_ = HandleStartMenu(gameArgs, buttons, &playerCount);
     }
     return playerCount;
@@ -141,20 +145,6 @@ int StartMenu(GameArgs gameArgs)
 <div class="project-text">
     <p>
         
-    </p>
-</div>
-
-<div class="project-text">
-    <p>
-        The server is authoritative and validates(or invalidates) every move received from clients.
-        Once validated, updates are broadcast to all connected players to keep the board synchronized.
-        The same system is also used for the in-game chat, ensuring reliable message delivery between clients.
-        Separating the networking layer (sockets) from gameplay logic makes the project easier to extend into larger multiplayer games in the future.
-        In this project GameClient wraps the client socket while GameServer wraps the server socket. The actual network code could be taken out of the project and used in another by just replacing the GameServer and GameClient which hold the logic.
-        The ClientSocket and GameServer have no knowledge of (and therefore no dependency to) the game logic<br><br>
-    </p>
-    <p>
-    This was only a simplified, condensed overview of how I created a multiplayer tic-tac-toe game with a robust architecture using only C++. If you’d like to learn more, you can check out the code in the repository below, or I’d be happy to discuss it with you.
     </p>
 </div>
 

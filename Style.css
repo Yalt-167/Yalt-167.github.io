@@ -15,6 +15,7 @@
   --accent2:     #00c3ff;
   --accent-dim:  rgba(0, 245, 160, 0.12);
   --text:        #e8e8f0;
+  /* --muted:       #8c8c9c; */
   --muted:       #6b6b80;
   --heading:     'Syne', sans-serif;
   --mono:        'Space Mono', monospace;
@@ -493,7 +494,7 @@ section {
 
 /* Main content wrapper */
 .project-main {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 8vw;
 }
@@ -563,9 +564,8 @@ section {
 .project-text p {
   font-family: var(--mono);
   font-size: 14px;
-  color: var(--muted);
+  /* color: var(--muted); */
   line-height: 1.9;
-  max-width: 920px;
 }
 
 .project-text p + p { margin-top: 16px; }
@@ -592,8 +592,8 @@ section {
 /* Actual images dropped inside .media-slot */
 .media-slot img,
 .media-slot video,
-.media-slot iframe {  
-  object-fit: cover;
+.media-slot iframe {
+  /* object-fit: cover; */
   border-radius: var(--radius);
 }
 
@@ -685,6 +685,10 @@ section {
   .project-nav { padding: 0 6vw; }
   .project-footer { padding: 40px 6vw 56px; }
   .tech-list li { font-size: 11px; }
+  .tab-btn {
+    padding: 0 14px;
+    font-size: 11px;
+  }
 }
 
 
@@ -830,12 +834,4 @@ code
 
 .tab-panel .project-section:last-child {
   padding-bottom: 48px;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .tab-btn {
-    padding: 0 14px;
-    font-size: 11px;
-  }
 }

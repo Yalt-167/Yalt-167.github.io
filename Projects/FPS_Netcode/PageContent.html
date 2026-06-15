@@ -1,17 +1,36 @@
 <section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p class="indented-text-content">
+        This is a POC I made to learn how to use UGS (Unity Game Services) along with Netcode for GameObjects with Unity
+    </p>
+    
+    <p class="indented-text-content">
+        The game flow is pretty simple. Upon connection, the user is greeted with a page to login to Unity Services (This part would be automatized in a real game but the backend relying on Steam, I wasn t gonna create a full Steam Project so this will be good enough for now)<br>
+    </p>
+    <p class="indented-text-content">
+        Once connected to UGS, The user can decide to host a party or join one. This system makes use of the Unity services "Lobby" for the party and "Relay" for the routing. The wanted gamemode and map and lobby settings (size, accessibility, name, etc) can be adjusted as wanted.<br>
+        When the lobby is populated as wanted, the host can launch the game. The players choose their team and the game can start
+    </p>
+</section>
+
+
+
+<section class="project-section">
     <h2 class="project-section-title">Content</h2>
 
 
-<div id="editorTabs" class="editor-tabs"><div class="tab-strip" role="tablist">
-    <button role="tab" aria-selected="true" aria-controls="tab-0" class="tab-btn active">
-      <span class="tab-icon">#</span>
-      <span class="tab-name">Lobby Management</span>
-    </button>
-    <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
-      <span class="tab-icon">#</span>
-      <span class="tab-name">Matchmaking</span>
-    </button>
-</div></div>
+<div id="editorTabs" class="editor-tabs">
+    <div class="tab-strip" role="tablist">
+        <button role="tab" aria-selected="true" aria-controls="tab-0" class="tab-btn active">
+        <span class="tab-icon">#</span>
+        <span class="tab-name">Lobby Management</span>
+        </button>
+        <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
+        <span class="tab-icon">#</span>
+        <span class="tab-name">Team Selection</span>
+        </button>
+    </div>
+</div>
 
 <br>
 
@@ -191,6 +210,105 @@ if (!IsLobbyHost())
 </div>
 
 <div class="tab-panel" id="tab-1" role="tabpanel" hidden>
+<div class="project-text">
+    <p>
+        Once players have gathered inside a lobby, they must be assigned to teams before the match can begin.
+        So far they where  
+        The Team Selector acts as a synchronized pre-game staging system, ensuring every client sees the same team composition before gameplay starts.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Networking is implemented using Unity Netcode for GameObjects RPCs. 
+        Rather than manually serializing packets, network behavior is expressed through standard C# methods 
+        decorated with RPC attributes.
+    </p>
+
+    <p>
+        Methods marked with <strong>[Rpc(SendTo.Server)]</strong> automatically execute on the server when called by a client, 
+        while <strong>[Rpc(SendTo.ClientsAndHost)]</strong> broadcasts execution from the server to every connected player.
+    </p>
+</div>
+
+<!-- <div class="media-slot todo-media">
+    <img
+        src="images/rpc-client-server-flow.png"
+        alt="images/rpc-client-server-flow.png"
+        width="100%" height="100%"
+    >
+</div> -->
+
+<div class="project-text">
+    <p>
+        Under the hood, Unity's Netcode analyzers and code generation tools detect RPC attributes during compilation 
+        and automatically generate the networking layer required to serialize parameters, route messages and invoke 
+        the target method on the appropriate machine.
+    </p>
+
+    <p>
+        This allows networked gameplay logic to remain readable and close to ordinary C# code while still executing 
+        across the network.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        The execution flow follows a server-authoritative model: clients submit requests, the server validates them, 
+        and approved changes are broadcast back to every participant. This ensures all players share a consistent view 
+        of team assignments before entering the match.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        The system is implemented as a networked singleton because only one team selection state should exist for the entire match. 
+        Centralizing team assignment prevents conflicting team data and provides a single authoritative entry point for all team-related operations.
+    </p>
+</div>
+
+<!-- <div class="media-slot todo-media">
+    <img
+        src="images/team-selector-overview.png"
+        alt="images/team-selector-overview.png"
+        width="100%" height="100%"
+    >
+</div> -->
+
+<div class="project-text">
+    <p>
+        Team configuration is initialized by the host and synchronized to every connected client. 
+        The number of teams and maximum team size are distributed through RPCs, allowing each client 
+        to locally construct an identical representation of the team selection screen.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Team membership is stored as lightweight arrays of player names. 
+        Since the system only exists during the pre-game phase, a simple array-based structure provides 
+        predictable memory usage and fast iteration while avoiding unnecessary complexity.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Players can freely switch teams through the menu. When a new team is selected, the player is 
+        automatically removed from their previous team before being inserted into the new one, ensuring 
+        team membership remains consistent across all clients.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        The match can only begin once every connected player has joined a team. 
+        This validation prevents incomplete team assignments and guarantees the game starts from a valid state.
+    </p>
+</div>
+
+</div>
+
+<div class="tab-panel" id="tab-2" role="tabpanel" hidden>
 ...
 </div>
 

@@ -21,15 +21,17 @@
                     Experienced with <b>Unity</b>, <b>Unreal Engine</b>, and low-level languages, I have a strong interest in understanding engine-level behavior and <b>memory/performance tradeoffs</b>.
                     I am passionate about developing <b>efficient</b> and <b>scalable</b> systems for high-performance, reliable software.<br><br>
                     
-                    Strong <b>communication</b> and <b>problem-solving</b> skills with the ability to collaborate effectively.
+                    Strong <b>communication</b> and <b>problem-solving</b> skills with the ability to collaborate effectively.<br><br>
                 </p>
+
+                <h3>This page is a work in progress and most projects aren't there yet. They're still accessible on my github page tho :)</h3>
             </div>
         </section>
 
         <section class="projects-section">
             <h2 class="section-title">Featured Projects</h2>
 
-            <div id="projectsGrid", class="projects-grid"></div>
+            <div id="projectsGrid" class="projects-grid"></div>
         </section>
 
         <section class="contact-section">
@@ -37,7 +39,7 @@
             <div class="contact-links">
                 <a href="https://github.com/Yalt-167" target="_blank">GitHub</a>
                 <a href="https://www.linkedin.com/in/antoine-riviale-a04a35293/" target="_blank" >LinkedIn</a>
-                <a href="javascript:void(0);"onclick="CopyEmail()">Copy Email</a>
+                <a href="javascript:CopyEmail();">Copy Email</a>
             </div>
         </section>
     </main>
@@ -46,21 +48,9 @@
     <script>
     function CopyEmail()
     {
-        const OnSuccess = () => 
-        {
-            alert("Email copied :)");
-            console.log("Email copied:", email);
-        }
-        const OnFailure = (error) =>
-        {
-            alert("Failed to copy email:", error);
-            console.error("Failed to copy email:", error);
-        }
-        const email = "antoine.riviale@gmail.com";
-
-        navigator.clipboard.writeText(email)
-            .then(OnSuccess)
-            .catch(OnFailure)
+        navigator.clipboard.writeText("antoine.riviale@gmail.com")
+            .then(() => alert("Email copied :)"))
+            .catch((error) => alert("Failed to copy email:", error))
         ;
     }
     </script>

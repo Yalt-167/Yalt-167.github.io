@@ -16,7 +16,7 @@ function LinkTabSystem()
                     
 
                     buttons.forEach(b => { b.classList.remove("active"); b.setAttribute("aria-selected", "false"); });
-                    panels.forEach(p  => { p.hidden = true; });
+                    panels.forEach(p  => p.hidden = true);
 
                     btn.classList.add("active");
                     btn.setAttribute("aria-selected", "true");
@@ -27,7 +27,10 @@ function LinkTabSystem()
     );
 }
 
-RandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+function RandomInt(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function StartUpdateLoadMessage()
 {
@@ -165,18 +168,6 @@ function UpdateTechStackList(project)
     document.addEventListener("click", UpdateExpandedTechStackListItem);
 }
 
-function UpdateProjectFullDescription(project)
-{
-    document.getElementById("projectFullDesc").innerHTML = 
-        `
-        <h2 class="project-section-title">Description</h2>
-        <div class="project-text">
-            ${project.FullDesc}
-        </div>
-        `
-    ;
-}
-
 function UpdateRepoLink(project)
 {
     document.getElementById("repoLink").innerHTML = 
@@ -208,7 +199,6 @@ function LoadProjectData()
     UpdateNavBar(project);
     UpdateProjectHeader(project);
     UpdateTechStackList(project);
-    UpdateProjectFullDescription(project);
     UpdateRepoLink(project);
     
     TryLoadSpecificPageContent(project);
