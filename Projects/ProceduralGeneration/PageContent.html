@@ -131,7 +131,7 @@ private void SpawnTilesVerticalSlice(Vector3 position)
     This method reduces every vertical slice of the world into up to 3 gameobjects (grass, dirt and stone) greatly reducing the overall object count of the map.
     This drastically reduces allocations and draw calls and therefore is much more efficient at runtime and much faster to generate.
 
-    This optimization did alleviate a lot of pressure on my machine tho it wasn t still wasn t acceptable for a game.
+    This optimization did alleviate a lot of pressure on my machine tho it still wasn t acceptable for a game.
     The current slice approach leaves a lot of faces that aren t exposed and just ruin performances for no reason.
     The fix was to write this simple mesh merger to cut down on the load.
 </p></div>
