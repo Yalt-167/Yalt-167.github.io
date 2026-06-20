@@ -74,6 +74,16 @@ const TECH_STACK =
         TechName: "ImGUI",
         TechDesc: "Graphical user interface library for fast and lightweight debugging tools and editor interfaces."
     },
+
+    {
+        TechName: " GitHub",
+        TechDesc: "Distributed version control and collaboration platform for code hosting, pull requests, and issue tracking. Includes GitHub Actions for CI/CD pipelines, enabling automated builds, testing, and deployment workflows integrated directly into repositories."
+    },
+
+    {
+        TechName: " GitHubActions",
+        TechDesc: "CI/CD automation system integrated into GitHub repositories, used to define workflows for building, testing, and deploying applications. Supports event-driven pipelines triggered by pushes, pull requests, schedules, and manual dispatch, with reusable actions and self-hosted or hosted runners.",
+    },
 ];
 
 const UNITY = 0;
@@ -91,6 +101,8 @@ const ASSIMP = 11;
 const MINIAUDIO = 12;
 const DIRECTX11 = 13;
 const IMGUI = 14;
+const GITHUB = 15;
+const GITHUB_ACTIONS = 16;
 
 // {
 //     ProjectName: "NAME OF THE FOLDER RELATED TO THAT PROJECT",
@@ -119,13 +131,13 @@ const PROJECTS =
         Repo: "https://github.com/Yalt-167/TicTacToeMultiplayer",
     },
 
-    // { // Oath of the volcano
-    //     ProjectName: "OathOfTheVolcano",
-    //     DisplayName: "Oath Of The Volcano",
-    //     ShortDesc: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
-    //     TechStack: [UNREAL_ENGINE],
-    //     Repo: "https://github.com/AriLeGrand/Oath-of-the-volcano",
-    // }, 
+    { // Oath of the volcano
+        ProjectName: "OathOfTheVolcano",
+        DisplayName: "Oath Of The Volcano",
+        ShortDesc: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
+        TechStack: [UNREAL_ENGINE],
+        Repo: "https://github.com/AriLeGrand/Oath-of-the-volcano",
+    }, 
 
     // { // fps netcode
     //     ProjectName: "FPS_Netcode",
@@ -171,6 +183,14 @@ const PROJECTS =
     //     TechStack: [UNREAL_ENGINE],
     //     Repo: "https://github.com/MagnierHugo/Click-Crash",
     // },
+
+    {
+        ProjectName: "SpaceWar_TDD_CI-CD",
+        DisplayName: "TDD and CI-CD project",
+        ShortDesc: "Small project aiming at setting up an TDD and CI-CD architecture and understand their purpose",
+        TechStack: [UNITY, GITHUB, GITHUB_ACTIONS],
+        Repo: "https://github.com/Yalt-167/SpaceWar_TDD_CI-CD",
+    },
 ];
 
 console.log("Data loaded");

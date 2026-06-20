@@ -1,0 +1,225 @@
+<section class="project-section">    
+    <h2 class="project-section-title">Description</h2>
+    <p><b>CI-CD & TDD</b></p>
+
+    <p class="indented-text-content">
+        Continuous Integration and Continuous Deployment (CI/CD) automates the process of validating, building and distributing a project after every change.
+    </p>
+
+    <p class="indented-text-content">
+        The goal is to reduce manual work, detect issues earlier and guarantee that every version of the project is built in a reproducible environment.
+    </p>
+
+    <p class="indented-text-content">
+        Test-Driven Development (TDD) is a development methodology where tests are written before implementing the actual feature.
+    </p>
+
+    <p>
+        The workflow follows a short iteration cycle: write a failing test → implement the code required → refactor while keeping tests passing.
+    </p>
+</div>
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
+
+<br>
+<div class="project-text">
+    <p>
+        Unity integration is handled through GitHub Actions workflows.<br>
+        The pipeline is integrated directly with GitHub so source control becomes the entry point of the automation workflow.<br>
+        Every push triggers GitHub Actions, which executes the CI pipeline inside an isolated environment and performs the build process automatically.
+    </p>
+    
+    <p>
+        The pipeline fisrt installs the required Unity Editor version in batch mode to avoid opening the editor.
+        The editor version and dependencies are fully defined as code inside workflow files stored alongside the project. 
+        This guarantees every build runs with identical configuration regardless of the machine executing it.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/CI-CD_Pipeline.png"
+        alt="SpaceWar_TDD_CI-CD/Images/CI-CD_Pipeline.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        The pipeline then tries to build the project. On build failure or test failure, the execution is immediatly aborted. This ensures that code on branches protected by the pipeline always works (produces a playable build) and is also compliant with the initial rules (set by the tests).
+        This ensures that no push accidentally breaks another feature without having to manually test everything manually.<br>
+        Though the set up might be cumbersome at first, it ends up greatly reducing the manual workload and the reliability of the product which is definitely worth it in the end.
+    </p>
+</div>
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/CI-CD_Failure.png"
+        alt="SpaceWar_TDD_CI-CD/Images/CI-CD_Failure.png"
+        height="100%" width="100%"
+    >
+</div>
+<br>    
+
+<div class="project-text">
+    <p>
+        Here s how it s implemented.<br><br>
+
+        Unity requires a license to use and you therefore have to provide some informations for Github to use ur license.
+        This is done through Github secrets (can be done through repository's settings tab). The secrets to provide are:
+    
+        <br> - UNITY_EMAIL (email used for your unity account)
+        <br> - UNITY_PASSWORD (password used for your unity account)
+        <br> - UNITY_LICENSE (your license's content)
+        
+        <br><br>
+        The next step is to setup the Unity project.
+        <br><br>
+
+        The game is contained within a Game folder with its own Assembly definiton and the code is in a Tests folder with another Assembly definition.
+        The Tests folder ensures Unity's build system doesn't pick it up in builds and the assembly definitions ensure it's kept in separate project (.csproj) and compiled independently.
+        <br><br>
+        As TDD intends, we first have to write the tests.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+using NUnit.Framework; // framework used for testing
+
+
+[TestFixture]
+public class PlayerTests
+{
+    private Player player;
+
+    [SetUp]
+    public void SetUp()
+    {
+        player = new Player();
+    }
+
+    [Test]
+    public void TakeDamage_Normal_ReducesHealth()
+    {
+        int damage = 20;
+        player.TakeDamage(damage);
+
+        Assert.AreEqual(player.BaseHealth - damage, player.Health);
+    }
+
+    ...
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Code explanation</b></p>
+    <p>
+        [TestFixture] -> Attribute marking the class for the pipeline to pick it up
+        [SetUp] -> Attributes marking the method as the method to initialize the class before running each Test
+        [Test] -> Attributes marking the method as a test method
+        Assert -> Static class that defines wether the test succeeded or failed. If the assertion isn't correct the test has failed
+    </p>
+
+    <p>
+        The SetUp() method makes sure the test is run on a untouched instance of the class.<br>
+        The TakeDamage_Normal_ReducesHealth() method make sure the player actually takes damage when the TakeDamage method is called. The naming convention is MethodItsTesting_Scenario_ExpectedResult.<br>
+        We intentionally avoid hardcoded/magic values to avoid issues because they are error prone and often rely on assumptions (example on why below)
+    </p>
+</div>
+<div><pre><code class="language-csharp">
+// same method but poorly implemented
+[Test]
+public void TakeDamage_Normal_ReducesHealth()
+{
+    player.TakeDamage(20); // we decide to apply 20 damage
+
+    Assert.AreEqual(80, player.Health);
+    // the 80 value seems to come out of nowhere (mostly cause it kinda does)
+    // here 80 is based on several assumptions:
+    // 1 -> assumes base health is 100 (will break the test if the base health ever change)
+    // 2 -> assumes correct maths and no typos
+    // (any maths failure or typo would result in an incorrect result)
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        We can now write the code to fulfill the test.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public sealed class Player
+{
+    public const int BaseHealth = 100;
+    public int Health { get; private set; } = BaseHealth;
+
+    public void TakeDamage(int amount)
+    {
+        Health = Mathf.Max(0, Health - amount);
+    }
+
+    ...
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        This minimal implementation passes the test however the only test we implemented is not sufficient are there are still some flaws.
+        For instance, dealing negative damage would heal. if that is intended behaviour, then great but it should be tested nevertheless.
+        That is why we developp an entire set of test to test edge-cases.
+    </p>
+</div>
+
+
+<div><pre><code class="language-csharp">
+// PlayerTests.cs
+[Test]
+public void TakeDamage_WithNegativeAmount_DoesNotChangeHealth()
+{
+    player.TakeDamage(-10);
+
+    Assert.AreEqual(player.BaseHealth, player.Health);
+}
+// this simple test highlights that issue and forces us to adapt the code
+
+// Player.cs
+public void TakeDamage(int amount)
+{
+    if (amount <=  0)
+        return;
+
+    Health = Mathf.Max(0, Health - amount);
+}
+
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Any modification of the method will still need to comply with the tests and therefore avoid breaking behaviour.
+    </p>
+    <p>
+        Here's what a successful push looks like
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/SuccessfulTest.png"
+        alt="SpaceWar_TDD_CI-CD/Images/SuccessfulTest.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        This is why TDD and CI-CD are great.
+        We write tests according to the intended behaviour.<br>
+        We then write the code to comply with these tests and therfore with the intended behaviour.<br>
+        Then, the CI-CD pipeline runs the tests and protected your code from breaking.
+    </p>
+</div>
+
+</section>
