@@ -72,7 +72,7 @@ const TECH_STACK =
 
     {
         TechName: "ImGUI",
-        TechDesc: "Graphical user interface library for fast and lightweight debugging tools and editor interfaces."
+        TechDesc: "Immediate Mode Graphical user interface library for fast and lightweight debugging tools and editor interfaces."
     },
 
     {
@@ -107,7 +107,7 @@ const GITHUB_ACTIONS = 16;
 // {
 //     ProjectName: "NAME OF THE FOLDER RELATED TO THAT PROJECT",
 //     DisplayName: "DISPLAY NAME FOR PROJECT CARD,
-//     ShortDesc: "SHORT DESC FOR PROJECT CARD,
+//     Description: "SHORT DESC FOR PROJECT CARD,
 //     TechStack: [TECH, STACK],
 //     Repo: "https://github.com/Yalt-167/REPO_NAME",
 // },
@@ -118,7 +118,7 @@ const PROJECTS =
     { // procedural gen
         ProjectName: "ProceduralGeneration",
         DisplayName: "Procedural Generation",
-        ShortDesc: "Voxel Generation project made in a week for a school project",
+        Description: "Voxel Generation project made in a week for a school project",
         TechStack: [UNITY, CSHARP],
         Repo: "https://github.com/Yalt-167/ProjetGenerationProcedurale",
     },
@@ -126,7 +126,7 @@ const PROJECTS =
     {  // tic tac toe
         ProjectName: "MultiplayerTicTacToe",
         DisplayName: "Multiplayer TicaTacToe",
-        ShortDesc: "Real time multiplayer TicTacToe written in raw C++",
+        Description: "Real time multiplayer TicTacToe written in raw C++",
         TechStack: [CPP, SFML, WINSOCK2, IMGUI],
         Repo: "https://github.com/Yalt-167/TicTacToeMultiplayer",
     },
@@ -134,23 +134,23 @@ const PROJECTS =
     { // Oath of the volcano
         ProjectName: "OathOfTheVolcano",
         DisplayName: "Oath Of The Volcano",
-        ShortDesc: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
+        Description: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
         TechStack: [UNREAL_ENGINE],
         Repo: "https://github.com/AriLeGrand/Oath-of-the-volcano",
     }, 
 
-    // { // fps netcode
-    //     ProjectName: "FPS_Netcode",
-    //     DisplayName: "Multiplayer FPS Netcode",
-    //     ShortDesc: "Custom FPS multiplayer architecture using Unity & Netcode (POC)",
-    //     TechStack: [UNITY, NETCODE, CSHARP],
-    //     Repo: "https://github.com/Yalt-167/Multiplayer_Shooter",
-    // },
+    { // MultiplayerFPSPOC
+        ProjectName: "MultiplayerFPS_POC",
+        DisplayName: "Multiplayer FPS POC",
+        Description: "Custom FPS multiplayer architecture using Unity & Netcode (POC)",
+        TechStack: [UNITY, NETCODE, CSHARP],
+        Repo: "https://github.com/Yalt-167/MultiplayerFPS_POC",
+    },
     
     // { // doxar engine
     //     ProjectName: "Doxar",
     //     DisplayName: "Doxar Engine",
-    //     ShortDesc: "Mini game engine written in C++ over the course of 6 weeks for a school project",
+    //     Description: "Mini game engine written in C++ over the course of 6 weeks for a school project",
     //     TechStack: [CPP, DIRECTX11, MINIAUDIO, ASSIMP, IMGUI],
     //     Repo: "https://github.com/Yalt-167/Doxar",
     // },
@@ -158,7 +158,7 @@ const PROJECTS =
     // { // RType
     //     ProjectName: "RType",
     //     DisplayName: "R-Type game",
-    //     ShortDesc: "Up to 2 player (local) R-Type like written in C and SDL",
+    //     Description: "Up to 2 player (local) R-Type like written in C and SDL",
     //     TechStack: [C, SDL],
     //     Repo: "https://github.com/MagnierHugo/C-RType",
     // },
@@ -166,7 +166,7 @@ const PROJECTS =
     // { // MicWizard
     //     ProjectName: "MicWizard",
     //     DisplayName: "MicWizard",
-    //     ShortDesc: "Microphone controlled game (POC) where you can cast spells using your voice to fend of waves of enemies",
+    //     Description: "Microphone controlled game (POC) where you can cast spells using your voice to fend of waves of enemies",
     //     TechStack: [UNITY, CSHARP],
     //     Repo: "https://github.com/MagnierHugo/MicWizard",
     // },
@@ -174,7 +174,7 @@ const PROJECTS =
     // {
     //     ProjectName: "Click&Crash",
     //     DisplayName: "Click&Crash",
-    //     ShortDesc: "Small 2D parkour game where your player dashes around a course of obstacle while its own speed blinds him",
+    //     Description: "Small 2D parkour game where your player dashes around a course of obstacle while its own speed blinds him",
     //     FullDesc: 
     //         `
     //         <pClick & Crash is a fast-paced 2D dash game where visibility is limited and precision is critical.
@@ -187,7 +187,7 @@ const PROJECTS =
     {
         ProjectName: "SpaceWar_TDD_CI-CD",
         DisplayName: "TDD and CI-CD project",
-        ShortDesc: "Small project aiming at setting up an TDD and CI-CD architecture and understand their purpose",
+        Description: "Small project aiming at setting up an TDD and CI-CD architecture and understand their purpose",
         TechStack: [UNITY, GITHUB, GITHUB_ACTIONS],
         Repo: "https://github.com/Yalt-167/SpaceWar_TDD_CI-CD",
     },

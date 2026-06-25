@@ -121,7 +121,6 @@
 </div>
 </div>
 
-
 <div class="tab-panel" id="tab-1" role="tabpanel" hidden>
 <div class="project-text">
     <p>
@@ -158,7 +157,7 @@
     </p>
 </div>
 
-<div class="media-slot todo-media">
+<div class="media-slot">
     <img
         src="OathOfTheVolcano/Images/CombatSystem/CombatSystemFlow.png"
         alt="OathOfTheVolcano/Images/CombatSystem/CombatSystemFlow.png"
@@ -202,12 +201,6 @@
         If any change is needed, it can be easily done by modifying the interface and adjust the actors implementing it as needed.
         The interface enforces compliance and therefore any actor class implementing it won t be able to compile before it actually implements every member of the interface.
     </p>
-        
-
-
-
-
-
 </div>
 
 
@@ -219,104 +212,58 @@
         The key rebinding system is generated dynamically from the player's saved input settings. 
         Instead of manually creating UI entries for every action, the menu is built directly from 
         the registered input mappings, ensuring the interface always reflects the current control scheme.
-    </p>
-</div>
-
-<!-- <div class="media-slot todo-media">
-    <img
-        src="images/rebind-system-overview.png"
-        alt="images/rebind-system-overview.png"
-        width="100%" height="100%"
-    >
-</div> -->
-
-<div class="project-text">
-    <p>
+        <br>
         The system retrieves the player's input settings, extracts all key mapping rows and 
         iterates through them to discover every rebindable action.
-    </p>
-
-    <p>
+        <br>
         For each mapping found, a dedicated Rebind Button widget is instantiated and added 
         to the rebinding menu automatically.
     </p>
 </div>
 
-<!-- <div class="media-slot todo-media">
+<div class="media-slot">
     <img
-        src="images/keymapping-enumeration-blueprint.png"
-        alt="images/keymapping-enumeration-blueprint.png"
+        src="OathOfTheVolcano/Images/RebindingSystem/RebindSystemOverview.png"
+        alt="OathOfTheVolcano/Images/RebindingSystem/RebindSystemOverview.png"
         width="100%" height="100%"
     >
-</div> -->
-
-<div class="project-text">
-    <p>
-        Each Rebind Button encapsulates the data required to modify a specific mapping. 
-        This keeps the menu generic and prevents the parent widget from containing 
-        action-specific rebinding logic.
-    </p>
 </div>
 
-<!-- <div class="media-slot todo-media">
-    <img
-        src="images/rebind-button-creation.png"
-        alt="images/rebind-button-creation.png"
-        width="100%" height="100%"
-    >
-</div> -->
-
 <div class="project-text">
     <p>
+        Each Rebind Button encapsulates the data and methhods required to modify a specific mapping. 
+        This keeps the menu generic and prevents the parent widget from containing 
+        action-specific rebinding logic.
+        <br>
         The widget consists of three elements: a label displaying the action name, 
         a button used to capture a replacement key and a reset button used to restore 
         the default binding.
-    </p>
-</div>
-
-<!-- <div class="media-slot todo-media">
-    <img 
-        src="images/rebind-button-layout.png"
-        alt="images/rebind-button-layout.png"
-        width="100%" height="100%"
-        >
-</div> -->
-
-<div class="project-text">
-    <p>
-        Key rebinding is handled through Unreal's Input Key Selector widget. 
-        When activated, the widget temporarily listens for the next key press 
-        and automatically returns the selected input.
-    </p>
-
-    <p>
-        The new key is then applied to the corresponding mapping and the displayed 
+        <br>
+        The button used to capture a replacement key makes use of Unreal's Input Key Selector widget. 
+        When activated, the widget temporarily listens for the next key press and automatically returns the selected input.
+        <br>
+        The new key is then applied to the corresponding mapping and the displayed
         value is refreshed to reflect the updated binding.
-    </p>
+    </p>    
 </div>
 
-<!-- <div class="media-slot todo-media">
+<div class="media-slot">
     <img
-        src="images/input-key-selector-flow.png"
-        alt="images/input-key-selector-flow.png"
+        src="OathOfTheVolcano/Images/RebindingSystem/RebindButtonOverview.png"
+        alt="OathOfTheVolcano/Images/RebindingSystem/RebindButtonOverview.png"
         width="100%" height="100%"
     >
-</div> -->
+</div>
 
 <div class="project-text">
     <p>
-        This design follows a data-driven approach where the UI is generated from 
+        This design uses a data-driven approach where the UI is generated from 
         player settings rather than hardcoded layouts. Adding new actions requires 
         no UI modifications, making the system scalable and easy to maintain.
     </p>
 </div>
 
-<!-- <div class="media-slot todo-media">
-    <img src="images/rebinding-workflow.png" width="100%" height="100%">
-</div> -->
-</div>
-
-</div>
+</div> <!-- <div class="tab-panel" id="tab-2" role="tabpanel" hidden> -->
 
 <script src="HandleTabs.js"></script>
 </section>

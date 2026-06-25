@@ -1,0 +1,570 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p class="indented-text-content">
+        This is a POC I made to learn how to use UGS (Unity Game Services) along with Netcode for GameObjects with Unity
+    </p>
+    
+    <p class="indented-text-content">
+        The game flow is pretty simple. Upon connection, the user is greeted with a page to login to Unity Services (This part would be automated in a real game but the backend relying on Steam, I wasn t gonna create a full Steam Project so this will be good enough for now)<br>
+    </p>
+    <p class="indented-text-content">
+        Once connected to UGS, The user can decide to host a lobby/party or join one. This system makes use of the Unity service "Lobby" for the party and "Relay" for the routing. The wanted gamemode and map and lobby settings (size, accessibility, name, etc) can be adjusted as wanted.<br>
+        When the lobby is populated as wanted, the host can start the game.
+    </p>
+</section>
+
+
+
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
+
+
+<div id="editorTabs" class="editor-tabs">
+    <div class="tab-strip" role="tablist">
+        <button role="tab" aria-selected="true" aria-controls="tab-0" class="tab-btn active">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Unity Services</span>
+        </button>
+        <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Lobby Management</span>
+        </button>
+        <button role="tab" aria-selected="false" aria-controls="tab-2" class="tab-btn">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Team Selection</span>
+        </button>
+    </div>
+</div>
+
+<br>
+
+<div class="tab-panel" id="tab-0" role="tabpanel">
+
+
+<div class="project-text">
+    <p>
+        Before accessing any Unity online feature (Lobby, Relay, Cloud services…), the project must guarantee that Unity Services are initialized and that the player is authenticated.
+    </p>
+
+    <p>
+        This system centralizes both responsibilities behind a single static authentication layer to avoid duplicated initialization and race conditions across gameplay systems.
+    </p>
+
+    <p>
+        The authenticator is implemented as a static service rather than a MonoBehaviour because authentication represents application state rather than scene state.
+    </p>
+
+    <p>
+        This removes lifecycle dependencies, prevents duplicate instances and allows any system to request authentication from anywhere in the project.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public static class UnityServiceAuthenticator
+{ 
+    public static bool IsSigningIn { get; private set; }
+    public static bool IsSignedIn { get; private set; }
+    public static string PlayerId => AuthenticationService.Instance.IsSignedIn ?
+        AuthenticationService.Instance.PlayerId :
+        string.Empty
+    ;
+
+    public static event Action OnSignIn;
+    public static event Action&ltRequestFailedException> OnSignInFailed;
+    public static event Action OnSignOut;
+    public static event Action OnSessionExpired;
+    public static event Action OnNoLongerSignedIn;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Service initialization follows an idempotent design: calling initialization multiple times is safe and never launches duplicate startup operations.
+        <br>
+        If initialization is already running, later callers simply wait for completion instead of starting another initialization sequence.
+        <br>
+        Concurrency is controlled using asynchronous locks built around state flags and waiting tasks.
+        If another system requests sign-in while authentication is already in progress, it waits for completion instead of starting a second request.
+        <br>
+        Timeouts are used to avoid deadlocks and guarantee callers eventually recover from stalled service states.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+    public static async Task&ltbool> TryInitServicesAsync()
+    {
+        if (UnityServices.State == ServicesInitializationState.Initialized)
+            return true;
+
+        if (UnityServices.State == ServicesInitializationState.Initializing) // mid initialization
+        {
+            Task task = WaitForUnityServiceInitialized();
+            if (await Task.WhenAny(task, Task.Delay(initializationTimeoutInMS)) != task)
+                return false; // timed out
+
+            return UnityServices.State == ServicesInitializationState.Initialized;
+        }
+
+        await UnityServices.InitializeAsync();
+
+        bool success = UnityServices.State == ServicesInitializationState.Initialized;
+
+        if (success &&!callbacksInitialized)
+        {
+            AuthenticationService.Instance.SignedIn += SignInCallback;
+            AuthenticationService.Instance.SignInFailed += SinInFailedCallback;
+            AuthenticationService.Instance.SignedOut += SignOutCallback;
+            AuthenticationService.Instance.Expired += SessionExpiredCallback;
+            
+            callbacksInitialized = true;
+        }
+
+        return success;
+    }  
+    
+    public static async Task&ltbool> TrySignInAsync(string profileName)
+    {
+        if (IsSignedIn)
+            return true;
+
+        if (IsSigningIn) // avoid concurrent sign in s
+        {
+            Task task = WaitForSignedIn();
+            if (await Task.WhenAny(task, Task.Delay(initializationTimeoutInMS)) != task)
+                return false; // timed out
+
+            return IsSignedIn;
+        }
+
+        if (UnityServices.State == ServicesInitializationState.Uninitialized)
+            if (!await TryInitServicesAsync())
+                return false; // Unity Services not initialized so cannot sign in
+
+        IsSigningIn = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(profileName))
+                AuthenticationService.Instance.SwitchProfile(   
+                    new Regex("[^a-zA-Z0-9 - _]").Replace(profileName, "")
+                    // remove non-alphanumeric characters
+                );
+
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Could not sign in: {ex.Message}");
+        }
+        finally
+        {
+            IsSigningIn = false; // release sign in lock
+        }
+
+        return IsSignedIn;
+    }
+
+    public static void SignOut() => AuthenticationService.Instance.SignOut();
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Player authentication supports profile switching before login. Profile names are sanitized before being forwarded to Unity Authentication to ensure only valid identifiers are used.
+        <br>
+        Sign-in itself remains abstracted behind a single asynchronous entry point returning success or failure instead of exposing SDK-specific behavior.
+        <br>
+        The system also exposes authentication state changes through events using the Observer pattern.
+        <br>
+        Systems subscribe to events such as Sign In, Sign Out, Session Expired or Sign In Failed without directly depending on Unity Authentication internals.
+        <br>
+        Callback registration is performed only once after successful initialization.
+        This prevents duplicate subscriptions and guarantees that authentication events are emitted exactly once per state transition.
+        <br>
+        <br>
+        The resulting flow behaves like a state machine:
+        <br>
+        Uninitialized → Initializing → Initialized → Signing In → Signed In → Signed Out / Session Expired
+        <br>
+        Centralizing this lifecycle allows multiplayer, lobby and cloud systems to consume authentication through a single reliable API.
+    </p>
+</div>
+
+
+</div>
+
+<div class="tab-panel" id="tab-1" role="tabpanel" hidden>
+    
+
+<div class="project-text">
+    <p>
+        The lobby/party system is built with Unity Lobby and Unity Relay. 
+        The architecture centralizes all the lobby logic inside a single 
+        LobbyHandler singleton to keep UI, relay setup and lobby synchronization coordinated.
+    </p>
+</div>
+
+
+<div><pre><code class="language-csharp">
+public sealed class LobbyHandler : MonoBehaviour
+{
+    public static LobbyHandler Instance { get; private set; }
+
+    private Lobby hostLobby;
+    private Player localPlayer;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        A Singleton pattern is used so every gameplay or UI system can access lobby state 
+        without repeatedly searching scene references. The class is marked sealed to prevent 
+        unintended inheritance on a critical networking manager.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        We ensure authetication to Unity Services before any Unityy Services operation. 
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public async void SignIn(string name) // this is the entry point
+{
+    if (!await UnityServiceAuthenticator.TrySignInAsync(ProfileName = name))
+        return;
+
+    // once connected to Unity Services, we store this local Player which essentially is our profile
+    // which we will use consistently across lobby operations
+    localPlayer = new Player(
+        id: UnityServiceAuthenticator.PlayerId,
+        data: new Dictionary<string, PlayerDataObject>()
+        {
+            [PlayerDataForLobby.Username] = new PlayerDataObject(
+                PlayerDataObject.VisibilityOptions.Public,
+                ProfileName
+            ),
+        }
+    );
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Heartbeat system run independently to keep lobby alive while minimizing 
+        unnecessary requests. Polling the server to prevent its deletion by Unity Services.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+private async void Update()
+{
+    if (!IsLobbyHost())
+        return;
+
+    heartbeatTimer += Time.deltaTime;
+    if (heartbeatTimer >= heartbeat)
+    {
+        heartbeatTimer = 0f;
+
+        try
+        {
+            await LobbyService.Instance.SendHeartbeatPingAsync(hostLobby!.Id);
+        }
+        catch (LobbyServiceException exception)
+        {
+            Debug.Log(exception);
+        }
+    }
+}
+</code></pre></div>
+
+
+<!-- Lobby Params -->
+
+<div class="project-text">
+   <p>
+      <strong>Lobby Parameters Abstraction</strong><br>
+      Lobby configuration is centralized inside <code>LobbyParams</code>, a dedicated data container responsible for storing, validating, and transporting lobby-related settings across the system.
+      <br><br>
+      This removes validation logic from gameplay code and ensures every creation/edit operation uses a single source of truth. The class validates constraints such as player capacity, empty names, and password requirements before any network request is sent.
+   </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public sealed class LobbyParams
+{
+    public string Name = "My Party";
+    public int Capacity = 2;
+    public bool IsPrivate;
+    public string Password = "";
+    public bool HasPassword => !string.IsNullOrEmpty(Password);
+    public string GameMode = GameModes.ToBeVoted;
+    public string Map = Maps.ToBeVoted;
+    
+
+    public bool AreInvalid() { ... }
+}
+</code></pre></div>
+
+
+<!-- Lobby Creation + Join Code -->
+
+<div class="project-text">
+   <p>
+      <strong>Lobby Creation</strong><br>
+      Creating a lobby generates a shared waiting room containing metadata such as map, game mode, privacy, and filters.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public async void CreateLobby(LobbyParams @params)
+{
+    // this call being triggered by user (through a button click)
+    // we must extensively check for any non-normalcy and concurrent operations
+
+    if (isCreatingLobby)
+        return;
+
+    if (@params.AreInvalid())
+        return;
+
+    isCreatingLobby = true; // lock to avoid concurrent API calls
+
+
+    CreateLobbyOptions lobbyOptions = new CreateLobbyOptions()
+    {
+        IsPrivate = @params.IsPrivate,
+        Player = localPlayer,
+        Password = @params.HasPassword ? @params.Password : noPassword,
+        Data = new Dictionary&ltstring, DataObject>()
+        {
+            [LobbyData.GameMode] = new DataObject(
+                visibility: DataObject.VisibilityOptions.Public,
+                value: @params.GameMode,
+                index: FiltersValues.GameMode
+            ),
+
+            [LobbyData.Map] = new DataObject(
+                visibility: DataObject.VisibilityOptions.Public,
+                value: @params.Map,
+                index: FiltersValues.Map
+            ),
+
+            [LobbyData.HasPassword] = new DataObject(
+                visibility: DataObject.VisibilityOptions.Public,
+                value: @params.HasPassword.ToString(),
+                index: FiltersValues.HasPassword
+            ),
+        },
+    };
+
+    try
+    {
+        hostLobby = await LobbyService.Instance.CreateLobbyAsync(
+            @params.Name, @params.Capacity, lobbyOptions
+        );
+    }
+    catch (LobbyServiceException exception)
+    {
+        Debug.Log($"Couldn t create a lobby. Reason: {exception.Message}");
+        return;
+    }
+    finally
+    {
+        isCreatingLobby = false;
+    }
+
+    await SubscribeLobbyEventsAsync();
+
+    CopyLobbyCode(); // copy lobby code to clipboard for easier sharing
+}
+</code></pre></div>
+
+
+<!-- Event Subscription -->
+
+<div class="project-text">
+    <p>
+        Any non-generic metadata (not API related) is indexed through the Data Dictionnary contained by the lobby to support filtering and discovery.
+    </p>
+    <p>
+        <br><br>
+        <strong>Lobby Event Subscription (Observer Pattern)</strong><br>
+        After creating or joining a lobby, clients subscribe to lobby events so state changes propagate automatically without continuously polling the server.
+        <br><br>
+        This follows the <strong>Observer pattern</strong>: clients register listeners and only react when relevant data changes. This greatly reduces unnecessary API calls while keeping lobby state synchronized in real time.
+        Now every lobby change on Unity's server is notifies the code using the relevant callback and can therefore be handled
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+private async Task SubscribeLobbyEventsAsync()
+{
+    if (!IsInLobby())
+        return;
+
+    LobbyEventCallbacks callbacks = new LobbyEventCallbacks();
+
+    callbacks.KickedFromLobby += OnKickedFromLobby;
+    callbacks.LobbyDeleted += OnLobbyDeleted;
+    callbacks.LobbyChanged += OnLobbyDataUpdated;
+    callbacks.PlayerDataChanged += OnLobbyPlayerDataChanged;
+
+    try
+    {
+        await LobbyService.Instance.SubscribeToLobbyEventsAsync(
+            hostLobby!.Id, callbacks
+        );
+    }
+    catch (LobbyServiceException exception)
+    {
+        Debug.Log(exception);
+    }
+}
+</code></pre></div>
+
+
+<!-- Start Game + Relay -->
+
+<div class="project-text">  
+   <p>
+        Now that all the players have joined the lobby we can actually move onto network code.
+        So far, everyone is just staring at the lobby withv their data in the Unity Server nobody is actually connected anyone.
+        <br><br>
+
+        <strong>Start Game → Relay Allocation</strong><br>
+        Starting the match creates a <strong>Relay allocation</strong>: a temporary relay server session that acts as a networking bridge between every player.
+        <br><br>
+        The host creates the allocation, receives a relay join code, and broadcasts this code through lobby data.
+        Subscribed clients instantly receive the update and connect to the same relay endpoint.
+   </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public async Task<bool> CreateRelayAsync(int slots)
+{
+    try
+    {
+        relayAllocation = await RelayService.Instance.CreateAllocationAsync(slots);
+        relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(relayAllocation.AllocationId);
+    }
+    catch (RelayServiceException exception)
+    {
+        Debug.Log(exception.Message);
+        return false;
+    }
+
+    // provide relay information to connect to it
+    unityTransport.SetHostRelayData(
+        relayAllocation.RelayServer.IpV4,
+        (ushort)relayAllocation.RelayServer.Port,
+        relayAllocation.AllocationIdBytes,
+        relayAllocation.Key,
+        relayAllocation.ConnectionData
+    );
+
+    // so far we only use name to send theh connection request but we could add anything we want
+    // this connection payload is parsed by the server to decide wether to let the player in and
+    // also defines what to do
+    // (wether to spawn a player/spectator if anything, its position, rotation, etc.)
+    NetworkManager.Singleton.NetworkConfig.ConnectionData =
+        new ConnectionPayload(ProfileName).Serialize()
+    ;
+#if HEADLESS_ARCHITECTURE_SERVER
+    bool success = NetworkManager.Singleton.StartServer();
+#else
+    bool success = NetworkManager.Singleton.StartHost();
+#endif
+    if (!success)
+        return false;
+    
+    // update lobby data:
+    // update which will propagate through previously mentionned callbacks on all lobby members
+    UpdateLobbyOptions updateLobbyOptions = new UpdateLobbyOptions()
+    {
+        Data = new Dictionary&ltstring, DataObject>()
+        {
+            [LobbyData.Region] = new DataObject(
+                visibility: DataObject.VisibilityOptions.Public,
+                value: relayAllocation.Region,
+                index: FiltersValues.Region
+            ),
+
+            [LobbyData.RelayJoinCode] = new DataObject(
+                visibility: DataObject.VisibilityOptions.Public,
+                value: relayJoinCode
+            ),
+        }
+    };
+
+    try
+    {
+        hostLobby = await LobbyService.Instance.UpdateLobbyAsync(hostLobby!.Id, updateLobbyOptions);
+    }
+    catch (LobbyServiceException exception)
+    {
+        Debug.Log(exception);
+        return false;
+    }
+
+    return true;
+}
+
+// the callback triggered upon lobby data change
+private void OnLobbyDataUpdated(ILobbyChanges changes)
+{
+    changes.ApplyToLobby(hostLobby);
+
+    if (!changes.Data.Changed)
+        return;
+
+    foreach (string changedKey in changes.Data.Value.Keys)
+    {
+        switch (changedKey)
+        {
+            // if the changed key is a relay join code, then auto join the relay allocation
+            case LobbyData.RelayJoinCode:
+                string joinCode = hostLobby!.Data[LobbyData.RelayJoinCode].Value;
+                Debug.Log($"Relay join code: {joinCode}");
+                InitiateGameStart(joinCode);
+                break;
+
+            default:
+                Debug.Log($"{changedKey}: {hostLobby!.Data[changedKey].Value}");
+                break;
+        }
+    }
+}
+</code></pre></div>
+
+<!-- Late Relay Allocation -->
+
+<div class="project-text">
+    <p>
+        <strong>Why Relay Allocation Happens Last</strong><br>
+        Relay allocations are intentionally created only when the host presses <strong>Start Game</strong>.
+        <br><br>
+        Relay settings cannot be partially edited after creation. changing lobby parameters would require discarding the existing allocation and creating a new one.
+        Delaying allocation avoids unnecessary server usage and guarantees that final lobby settings are used for the active session.
+        <br><br>
+    </p>
+</div>
+
+
+<!-- Conclusion -->
+
+<div class="project-text">
+    <p>
+        Now, everyone is actually connected together and we can use Netcode to actually play the game.
+
+        <strong>Result</strong><br>
+        The lobby system acts as the orchestration layer: players discover, configure, and organize sessions there.
+        Once the relay join code is propagated, every participant connects to the same relay allocation and transitions into a shared networking session.
+        <br><br>
+        From that point onward, gameplay communication is handled entirely by <code>Netcode for GameObjects</code>.
+        We will still need to come back to this class if the players decide to expand the lobby as a new relay allocation will need to be created.
+        A new relay join code will be created and propagated to every member of the lobby, causing them to automatically join the new game room.
+    </p>
+</div>
+<script src="HandleTabs.js"></script>
+</section>

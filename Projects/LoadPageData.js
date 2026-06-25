@@ -111,7 +111,7 @@ function UpdateProjectHeader(project)
         <div class="project-hero-content">
             <div class="project-meta-tag">PROJECT</div>
             <h1 class="project-title">${project.DisplayName}</h1>
-            <p class="project-short-desc">${project.ShortDesc}</p>
+            <p class="project-short-desc">${project.Description}</p>
         </div>
         `
     ;

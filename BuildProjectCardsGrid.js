@@ -5,7 +5,7 @@ function MakeProjectCard(project, index)
                 <img src="Projects/${project.ProjectName}/Images/${project.ProjectName}.png" alt="Image not found">
                 <div class="project-info">
                     <h3>${project.DisplayName}</h3>
-                    <p>${project.ShortDesc}</p>
+                    <p>${project.Description}</p>
                 </div>
             </a>
             `;
