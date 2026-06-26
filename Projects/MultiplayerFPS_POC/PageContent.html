@@ -31,7 +31,7 @@
         </button>
         <button role="tab" aria-selected="false" aria-controls="tab-2" class="tab-btn">
             <span class="tab-icon">#</span>
-            <span class="tab-name">Team Selection</span>
+            <span class="tab-name">Game Start</span>
         </button>
     </div>
 </div>
@@ -191,9 +191,11 @@ public static class UnityServiceAuthenticator
 
 </div>
 
-<div class="tab-panel" id="tab-1" role="tabpanel" hidden>
-    
 
+
+<div class="tab-panel" id="tab-1" role="tabpanel" hidden>
+
+    
 <div class="project-text">
     <p>
         The lobby/party system is built with Unity Lobby and Unity Relay. 
@@ -201,7 +203,6 @@ public static class UnityServiceAuthenticator
         LobbyHandler singleton to keep UI, relay setup and lobby synchronization coordinated.
     </p>
 </div>
-
 
 <div><pre><code class="language-csharp">
 public sealed class LobbyHandler : MonoBehaviour
@@ -566,5 +567,118 @@ private void OnLobbyDataUpdated(ILobbyChanges changes)
         A new relay join code will be created and propagated to every member of the lobby, causing them to automatically join the new game room.
     </p>
 </div>
+
+
+</div>
+
+
+
+<div class="tab-panel" id="tab-2" role="tabpanel" hidden>
+
+
+<div class="project-text">
+    <p>
+        <strong>Short netcode introduction:</strong><br>
+
+        Networking is implemented using Unity Netcode for GameObjects RPCs. 
+        Rather than manually serializing packets, network behavior is expressed through standard C# methods 
+        decorated with RPC attributes.
+    </p>
+
+    <p>
+        Methods marked with <strong>[Rpc(SendTo.Server)]</strong> automatically execute on the server when called by a client, 
+        while <strong>[Rpc(SendTo.ClientsAndHost)]</strong> broadcasts execution from the server to every connected player.
+    </p>
+
+    <p>
+        Under the hood, Unity's Netcode analyzers and code generation tools detect RPC attributes during compilation 
+        and automatically generate the networking layer required to serialize parameters, route messages and invoke 
+        the target method on the appropriate machine.
+    </p>
+
+    <p>
+        This allows networked gameplay logic to remain readable and close to ordinary C# code while still executing 
+        across the network.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="MultiplayerFPS_POC/Images/NetcodeOverview.png"
+        alt="MultiplayerFPS_POC/Images/NetcodeOverview.png"
+        width="100%" height="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        The execution flow follows a server-authoritative model: clients submit requests, the server validates them, 
+        and approved changes are broadcast back to every participant. This ensures all players share a consistent view 
+        of all game data during gameplay.
+    </p>
+
+    <p>
+        The game rules must be enforced by the server/host so the host/server spawns the NetworkObject holding the gamemode rules that will handle gameflow and propagate game progress to every client.
+        This is the equivalent of Unreal Engine's gamemode only running on the server.
+
+    </p>
+</div>
+
+
+<!-- <div class="project-text">
+    <p>
+        Once players have gathered inside a game room, they must be assigned to teams before the match can begin.
+        So far they where  
+        The Team Selector acts as a synchronized pre-game staging system, ensuring every client sees the same team composition before gameplay starts.
+    </p>
+</div>
+
+
+<div class="project-text">
+    <p>
+        The system is implemented as a networked singleton because only one team selection state should exist for the entire match. 
+        Centralizing team assignment prevents conflicting team data and provides a single authoritative entry point for all team-related operations.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Team configuration is initialized by the host and synchronized to every connected client. 
+        The number of teams and maximum team size are distributed through RPCs, allowing each client 
+        to locally construct an identical representation of the team selection screen.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Team membership is stored as lightweight arrays of player names. 
+        Since the system only exists during the pre-game phase, a simple array-based structure provides 
+        predictable memory usage and fast iteration while avoiding unnecessary complexity.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Players can freely switch teams through the menu. When a new team is selected, the player is 
+        automatically removed from their previous team before being inserted into the new one, ensuring 
+        team membership remains consistent across all clients.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        The match can only begin once every connected player has joined a team. 
+        This validation prevents incomplete team assignments and guarantees the game starts from a valid state.
+    </p>
+</div> -->
+
+</div>
+
+<div class="tab-panel" id="tab-3" role="tabpanel" hidden>
+...
+</div>
+
+
+
 <script src="HandleTabs.js"></script>
 </section>
