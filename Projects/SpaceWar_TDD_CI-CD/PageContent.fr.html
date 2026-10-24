@@ -1,0 +1,223 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p><b>CI/CD et TDD</b></p>
+
+    <p class="indented-text-content">
+        L'intégration et le déploiement continus (CI/CD) automatisent la validation, le build et la distribution d'un projet après chaque modification.
+    </p>
+
+    <p class="indented-text-content">
+        L'objectif est de réduire le travail manuel, de détecter les problèmes plus tôt et de garantir que chaque version du projet est construite dans un environnement reproductible.
+    </p>
+
+    <p class="indented-text-content">
+        Le développement piloté par les tests (TDD) est une méthode de développement dans laquelle les tests sont écrits avant d'implémenter la fonctionnalité elle-même.
+    </p>
+
+    <p>
+        Le travail suit un cycle d'itérations courtes : écrire un test qui échoue → implémenter le code nécessaire → refactoriser en gardant les tests au vert.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Contenu</h2>
+
+<br>
+<div class="project-text">
+    <p>
+        L'intégration avec Unity passe par des workflows GitHub Actions.<br>
+        Le pipeline est directement intégré à GitHub : le gestionnaire de versions devient ainsi le point d'entrée de l'automatisation.<br>
+        Chaque push déclenche GitHub Actions, qui exécute le pipeline CI dans un environnement isolé et lance automatiquement le build.
+    </p>
+
+    <p>
+        Le pipeline commence par installer la version requise de l'éditeur Unity en mode batch, pour éviter d'ouvrir l'éditeur.
+        La version de l'éditeur et les dépendances sont entièrement définies sous forme de code dans des fichiers de workflow stockés avec le projet.
+        Chaque build s'exécute ainsi avec une configuration identique, quelle que soit la machine qui l'exécute.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/CI-CD_Pipeline.png"
+        alt="SpaceWar_TDD_CI-CD/Images/CI-CD_Pipeline.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Le pipeline tente ensuite de builder le projet. En cas d'échec du build ou d'un test, l'exécution est immédiatement interrompue. Le code des branches protégées par le pipeline fonctionne donc toujours (il produit un build jouable) et respecte les règles définies au départ (par les tests).
+        Aucun push ne peut ainsi casser une autre fonctionnalité par accident, sans avoir à tout retester à la main.<br>
+        Même si la mise en place peut sembler fastidieuse au début, elle finit par réduire fortement la charge de travail manuelle et améliore la fiabilité du produit : l'effort en vaut largement la peine.
+    </p>
+</div>
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/CI-CD_Failure.png"
+        alt="SpaceWar_TDD_CI-CD/Images/CI-CD_Failure.png"
+        height="100%" width="100%"
+    >
+</div>
+<br>
+
+<div class="project-text">
+    <p>
+        Voici comment c'est mis en place.<br><br>
+
+        Unity nécessite une licence : il faut donc fournir quelques informations pour que GitHub puisse utiliser la vôtre.
+        Cela se fait via les secrets GitHub (configurables dans l'onglet Settings du dépôt). Les secrets à renseigner sont :
+
+        <br> - UNITY_EMAIL (l'email de votre compte Unity)
+        <br> - UNITY_PASSWORD (le mot de passe de votre compte Unity)
+        <br> - UNITY_LICENSE (le contenu de votre licence)
+
+        <br><br>
+        L'étape suivante consiste à configurer le projet Unity.
+        <br><br>
+
+        Le jeu se trouve dans un dossier Game avec sa propre Assembly Definition, et les tests dans un dossier Tests avec une autre Assembly Definition.
+        Le dossier Tests garantit que le système de build de Unity ne l'inclut pas dans les builds, et les Assembly Definitions permettent de le garder dans un projet séparé (.csproj) compilé indépendamment.
+        <br><br>
+        Comme le veut le TDD, on commence par écrire les tests.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+using NUnit.Framework; // framework used for testing
+
+
+[TestFixture]
+public class PlayerTests
+{
+    private Player player;
+
+    [SetUp]
+    public void SetUp()
+    {
+        player = new Player();
+    }
+
+    [Test]
+    public void TakeDamage_Normal_ReducesHealth()
+    {
+        int damage = 20;
+        player.TakeDamage(damage);
+
+        Assert.AreEqual(player.BaseHealth - damage, player.Health);
+    }
+
+    ...
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Explication du code</b></p>
+    <p>
+        [TestFixture] -> attribut qui marque la classe pour que le pipeline la prenne en compte
+        [SetUp] -> attribut qui désigne la méthode chargée d'initialiser la classe avant chaque test
+        [Test] -> attribut qui marque la méthode comme méthode de test
+        Assert -> classe statique qui détermine si le test a réussi ou échoué. Si l'assertion est fausse, le test échoue
+    </p>
+
+    <p>
+        La méthode SetUp() garantit que chaque test s'exécute sur une instance vierge de la classe.<br>
+        La méthode TakeDamage_Normal_ReducesHealth() vérifie que le joueur subit bien des dégâts quand on appelle TakeDamage. La convention de nommage est MéthodeTestée_Scénario_RésultatAttendu.<br>
+        On évite volontairement les valeurs codées en dur (« magiques ») : elles sont sources d'erreurs et reposent souvent sur des hypothèses (exemple ci-dessous).
+    </p>
+</div>
+<div><pre><code class="language-csharp">
+// same method but poorly implemented
+[Test]
+public void TakeDamage_Normal_ReducesHealth()
+{
+    player.TakeDamage(20); // we decide to apply 20 damage
+
+    Assert.AreEqual(80, player.Health);
+    // the 80 value seems to come out of nowhere (mostly cause it kinda does)
+    // here 80 is based on several assumptions:
+    // 1 -> assumes base health is 100 (will break the test if the base health ever change)
+    // 2 -> assumes correct maths and no typos
+    // (any maths failure or typo would result in an incorrect result)
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        On peut maintenant écrire le code qui satisfait le test.
+    </p>
+</div>
+
+<div><pre><code class="language-csharp">
+public sealed class Player
+{
+    public const int BaseHealth = 100;
+    public int Health { get; private set; } = BaseHealth;
+
+    public void TakeDamage(int amount)
+    {
+        Health = Mathf.Max(0, Health - amount);
+    }
+
+    ...
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Cette implémentation minimale passe le test, mais ce seul test ne suffit pas : il reste des failles.
+        Par exemple, infliger des dégâts négatifs soignerait le joueur. Si c'est le comportement voulu, tant mieux, mais il faut quand même le tester.
+        C'est pourquoi on développe toute une série de tests pour couvrir les cas limites.
+    </p>
+</div>
+
+
+<div><pre><code class="language-csharp">
+// PlayerTests.cs
+[Test]
+public void TakeDamage_WithNegativeAmount_DoesNotChangeHealth()
+{
+    player.TakeDamage(-10);
+
+    Assert.AreEqual(player.BaseHealth, player.Health);
+}
+// this simple test highlights that issue and forces us to adapt the code
+
+// Player.cs
+public void TakeDamage(int amount)
+{
+    if (amount <=  0)
+        return;
+
+    Health = Mathf.Max(0, Health - amount);
+}
+
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        Toute modification future de la méthode devra toujours respecter les tests, ce qui évite de casser son comportement.
+    </p>
+    <p>
+        Voici à quoi ressemble un push réussi.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="SpaceWar_TDD_CI-CD/Images/SuccessfulTest.png"
+        alt="SpaceWar_TDD_CI-CD/Images/SuccessfulTest.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Voilà tout l'intérêt du TDD et de la CI/CD.
+        On écrit les tests en fonction du comportement attendu.<br>
+        On écrit ensuite le code qui respecte ces tests, et donc le comportement attendu.<br>
+        Enfin, le pipeline CI/CD exécute les tests et empêche votre code d'être cassé.
+    </p>
+</div>
+
+</section>

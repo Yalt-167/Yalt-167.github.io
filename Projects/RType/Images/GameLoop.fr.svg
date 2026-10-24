@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Boucle de jeu : une frame en six étapes">
+<title>Boucle de jeu : une frame en six étapes</title>
+<defs><marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc26a"/></marker><marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef5b5b"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">Boucle de jeu : une frame en six étapes</text>
+<text x="48" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">INITIALISATION · UNE FOIS</text>
+<rect x="48" y="158" width="250" height="72" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="68" y="188" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#e8eaf0" text-anchor="start">StartSDL()</text>
+<text x="68" y="212" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">fenêtre, renderer, textures</text>
+<path d="M173 230 L173 268" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="48" y="270" width="250" height="72" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="68" y="300" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#e8eaf0" text-anchor="start">CreateLevels()</text>
+<text x="68" y="324" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">4 niveaux + leurs ennemis</text>
+<path d="M173 342 L173 380" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="48" y="382" width="250" height="72" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="68" y="412" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#e8eaf0" text-anchor="start">StartMenu()</text>
+<text x="68" y="436" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">solo ou duo, touches</text>
+<path d="M298 418 L348 418" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="350" y="124" width="750" height="516" rx="16" fill="rgba(0,245,160,0.03)" stroke="#00f5a0" stroke-width="2"/>
+<text x="725" y="164" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#00f5a0" text-anchor="middle" letter-spacing="3">POUR CHAQUE NIVEAU · ×4</text>
+<text x="725" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="middle">while (State.Continue)</text>
+<rect x="380" y="226" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="408" cy="258" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="408" y="263" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">1</text>
+<text x="432" y="264" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">Tick()</text>
+<text x="400" y="304" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">calcule le delta time</text>
+<rect x="620" y="226" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="648" cy="258" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="648" y="263" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">2</text>
+<text x="672" y="264" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">HandleInputs()</text>
+<text x="640" y="304" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">clavier + manettes</text>
+<rect x="860" y="226" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="888" cy="258" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="888" y="263" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">3</text>
+<text x="912" y="264" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">Update()</text>
+<text x="880" y="304" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">bouge, tire, collisions</text>
+<rect x="380" y="420" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="408" cy="452" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="408" y="457" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">4</text>
+<text x="432" y="458" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">Draw()</text>
+<text x="400" y="498" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">scène, HUD, effets</text>
+<rect x="620" y="420" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="648" cy="452" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="648" y="457" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">5</text>
+<text x="672" y="458" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">SDL_Delay()</text>
+<text x="640" y="498" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">attend 16 ms</text>
+<rect x="860" y="420" width="210" height="104" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="888" cy="452" r="14" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="888" y="457" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">6</text>
+<text x="912" y="458" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">CheckEndGame()</text>
+<text x="880" y="498" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">gagné, perdu ou en cours</text>
+<path d="M590 278.0 L618 278.0" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<path d="M830 278.0 L858 278.0" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<path d="M590 472.0 L618 472.0" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<path d="M830 472.0 L858 472.0" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<path d="M965 330 L965 375 L485 375 L485 418" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<path d="M965 524 L965 584 L364 584 L364 278 L378 278" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<text x="665" y="612" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#00f5a0" text-anchor="middle">0 · frame suivante</text>
+<text x="1140" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">À LA FIN D'UN NIVEAU</text>
+<rect x="1140" y="226" width="412" height="104" rx="12" fill="#10131a" stroke="#4cc26a" stroke-width="1.5"/>
+<text x="1164" y="270" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#4cc26a" text-anchor="start">1 · niveau terminé</text>
+<text x="1164" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">ClearScene(), puis niveau suivant</text>
+<rect x="1140" y="360" width="412" height="104" rx="12" fill="#10131a" stroke="#ef5b5b" stroke-width="1.5"/>
+<text x="1164" y="404" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#ef5b5b" text-anchor="start">-1 · les deux joueurs sont morts</text>
+<text x="1164" y="434" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">ClearScene(), la boucle s'arrête</text>
+<path d="M1070 472 L1105 472 L1105 278 L1138 278" fill="none" stroke="#4cc26a" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-green)"/>
+<path d="M1105 412 L1138 412" fill="none" stroke="#ef5b5b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<rect x="1140" y="520" width="412" height="104" rx="12" fill="rgba(0,245,160,0.05)" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="1164" y="564" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#e8eaf0" text-anchor="start">EndScreen() → QuitGame()</text>
+<text x="1164" y="594" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">après le niveau 4 ou un game over</text>
+<path d="M1346 464 L1346 518" fill="none" stroke="#ef5b5b" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-red)"/>
+<path d="M1552 278 L1574 278 L1574 572 L1554 572" fill="none" stroke="#4cc26a" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-green)" stroke-dasharray="5 4"/>
+<rect x="48" y="664" width="1504" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="700" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">POINTS CLÉS</text>
+<circle cx="80" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="96" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Les déplacements sont multipliés par DeltaTime : la vitesse ne dépend pas du framerate</text>
+<circle cx="832" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="848" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">SDL_Delay évite que la boucle tourne à 100 % du CPU</text>
+<circle cx="80" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="96" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">La même boucle gère les 4 niveaux, le dernier ajoute le boss</text>
+<circle cx="832" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="848" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">La fin d'un niveau libère aussitôt ses tableaux (ClearScene)</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">R-TYPE · BOUCLE DE JEU</text>
+</svg>

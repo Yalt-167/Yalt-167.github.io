@@ -3,7 +3,7 @@
    <p><b>Multiplayer Networking:</b></p>
 
     <p class="indented-text-content">
-        This project is a multiplayer Tic Tac Toe game developed in C++ using SDL for rendering/input handling,
+        This project is a multiplayer Tic Tac Toe game developed in C++ using SFML for rendering/input handling,
         WinSock2 for network communication, and ImGUI for the user interface and in-game chat system.
         The application allows two players to connect over a local network or the internet and play in real time
         through a client/server architecture.<br><br>
@@ -11,7 +11,7 @@
 
     <p class="indented-text-content">
         Network synchronization is handled using TCP sockets through WinSock2 to ensure reliable transmission
-        of game state updates and chat messages between players. SDL is responsible for window management,
+        of game state updates and chat messages between players. SFML is responsible for window management,
         rendering, and input processing while ImGUI provides a lightweight and responsive debugging and chat interface.
         The project focuses on real-time communication, game state synchronization, and low-level networking concepts in C++.
     </p>
@@ -652,7 +652,7 @@ void GameClient::Chat()
         The same system is also used for the in-game chat, ensuring reliable message delivery between clients.
         Separating the networking layer (sockets) from gameplay logic makes the project easier to extend into larger multiplayer games in the future.
         In this project GameClient wraps the client socket while GameServer wraps the server socket. The actual network code could be taken out of the project and used in another by just replacing the GameServer and GameClient which hold the logic.
-        The ClientSocket and GameServer have no knowledge of (and therefore no dependency to) the game logic<br><br>
+        The ClientSocket and ServerSocket have no knowledge of (and therefore no dependency to) the game logic<br><br>
     </p>
     <p>
     Here is a simplified, condensed overview of how I created a multiplayer tic-tac-toe game with a robust architecture using only C++. If you’d like to learn more, you can check out the code in the repository below, or I’d be happy to discuss it with you.

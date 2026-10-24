@@ -445,6 +445,64 @@ section {
   text-transform: uppercase;
 }
 
+/* ── Language switch ── */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-lang {
+  position: absolute;
+  top: 24px;
+  right: 8vw;
+  z-index: 2;
+}
+
+.lang-switch {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.lang-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.lang-btn:hover {
+  color: var(--accent);
+  border-color: rgba(0,245,160,0.3);
+}
+
+.lang-btn.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(0,245,160,0.4);
+}
+
+/* Shown above project content that has no translation yet */
+.translation-notice {
+  font-size: 13px;
+  color: var(--muted);
+  border-left: 2px solid var(--accent2);
+  padding: 10px 16px;
+  margin: 32px 0 0;
+  background: rgba(0,195,255,0.05);
+}
+
+@media (max-width: 640px) {
+  .nav-right .nav-label { display: none; }
+  .site-lang { top: 16px; right: 6vw; }
+}
+
 /* ── Back link (shared between nav + footer) ── */
 .back-link {
   display: inline-flex;
@@ -650,6 +708,14 @@ section {
 .media-slot iframe {
   /* object-fit: cover; */
   border-radius: var(--radius);
+}
+
+/* Image wrapped in a link to open it full size */
+.media-slot > a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: zoom-in;
 }
 
 /* Repo link */

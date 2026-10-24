@@ -3,103 +3,171 @@ const TECH_STACK =
     {
         TechName: "Unity",
         Category: "Engine",
-        TechDesc: "Cross-platform game engine used for 2D and 3D game development with a rich editor and asset pipeline."
+        TechDesc:
+        {
+            en: "Cross-platform game engine used for 2D and 3D game development with a rich editor and asset pipeline.",
+            fr: "Moteur de jeu multiplateforme pour le développement 2D et 3D, doté d'un éditeur complet et d'un pipeline d'assets.",
+        },
     },
 
     {
         TechName: "Unity Netcode",
         Category: "Library",
-        TechDesc: "Unity's first-party networking library for multiplayer games using client-server and host architectures."
+        TechDesc:
+        {
+            en: "Unity's first-party networking library for multiplayer games using client-server and host architectures.",
+            fr: "Bibliothèque réseau officielle de Unity pour les jeux multijoueurs, en architecture client-serveur ou host.",
+        },
     },
 
     {
         TechName: "Unreal Engine",
         Category: "Engine",
-        TechDesc: "High-fidelity game engine by Epic Games with Blueprints, C++ gameplay systems, and AAA rendering pipeline."
+        TechDesc:
+        {
+            en: "High-fidelity game engine by Epic Games with Blueprints, C++ gameplay systems, and AAA rendering pipeline.",
+            fr: "Moteur de jeu haute fidélité d'Epic Games, avec Blueprints, gameplay en C++ et pipeline de rendu AAA.",
+        },
     },
     
     {
         TechName: "C#",
         Category: "Language",
-        TechDesc: "Strongly-typed language used for Unity scripting and .NET development."
+        TechDesc:
+        {
+            en: "Strongly-typed language used for Unity scripting and .NET development.",
+            fr: "Langage fortement typé utilisé pour le scripting Unity et le développement .NET.",
+        },
     },
     
     {
         TechName: "C++",
         Category: "Language",
-        TechDesc: "High-performance systems language used in game engines, Unreal Engine, and engine development."
+        TechDesc:
+        {
+            en: "High-performance systems language used in game engines, Unreal Engine, and engine development.",
+            fr: "Langage système haute performance utilisé dans les moteurs de jeu, Unreal Engine et le développement de moteurs.",
+        },
     },
     
     {
         TechName: "C",
         Category: "Language",
-        TechDesc: "Low-level procedural language used for systems programming and engine foundations."
+        TechDesc:
+        {
+            en: "Low-level procedural language used for systems programming and engine foundations.",
+            fr: "Langage procédural bas niveau utilisé pour la programmation système et les fondations des moteurs.",
+        },
     },
 
     {
         TechName: "SDL",
         Category: "Library",
-        TechDesc: "Cross-platform multimedia library providing low-level access to input, audio, and graphics."
+        TechDesc:
+        {
+            en: "Cross-platform multimedia library providing low-level access to input, audio, and graphics.",
+            fr: "Bibliothèque multimédia multiplateforme offrant un accès bas niveau aux entrées, à l'audio et aux graphismes.",
+        },
     },
     
     {
         TechName: "SFML",
         Category: "Library",
-        TechDesc: "C++ multimedia library for 2D graphics, audio, and window management."
+        TechDesc:
+        {
+            en: "C++ multimedia library for 2D graphics, audio, and window management.",
+            fr: "Bibliothèque multimédia C++ pour les graphismes 2D, l'audio et la gestion des fenêtres.",
+        },
     },
     
     {
         TechName: "Winsock2",
         Category: "Library",
-        TechDesc: "Windows networking API for TCP/UDP socket programming."
+        TechDesc:
+        {
+            en: "Windows networking API for TCP/UDP socket programming.",
+            fr: "API réseau de Windows pour la programmation de sockets TCP/UDP.",
+        },
     },
     
     {
         TechName: "Python",
         Category: "Language",
-        TechDesc: "High-level language used for scripting, tooling, automation, and prototyping."
+        TechDesc:
+        {
+            en: "High-level language used for scripting, tooling, automation, and prototyping.",
+            fr: "Langage haut niveau utilisé pour le scripting, l'outillage, l'automatisation et le prototypage.",
+        },
     },
     
     {
         TechName: "Pygame",
         Category: "Library",
-        TechDesc: "Python game library built on SDL for 2D game development."
+        TechDesc:
+        {
+            en: "Python game library built on SDL for 2D game development.",
+            fr: "Bibliothèque de jeu Python basée sur SDL pour le développement de jeux 2D.",
+        },
     },
     
     {
         TechName: "Assimp",
         Category: "Library",
-        TechDesc: "Asset import library for loading 3D models (FBX, OBJ, GLTF, etc.)."
+        TechDesc:
+        {
+            en: "Asset import library for loading 3D models (FBX, OBJ, GLTF, etc.).",
+            fr: "Bibliothèque d'import d'assets pour charger des modèles 3D (FBX, OBJ, GLTF, etc.).",
+        },
     },
     
     {
         TechName: "miniaudio",
         Category: "Library",
-        TechDesc: "Single-header audio library for playback and processing with no dependencies."
+        TechDesc:
+        {
+            en: "Single-header audio library for playback and processing with no dependencies.",
+            fr: "Bibliothèque audio sans dépendance, tenant en un seul header, pour la lecture et le traitement du son.",
+        },
     },
     
     {
         TechName: "DirectX 11",
         Category: "Library",
-        TechDesc: "Low-level graphics API for real-time rendering and GPU programming on Windows."
+        TechDesc:
+        {
+            en: "Low-level graphics API for real-time rendering and GPU programming on Windows.",
+            fr: "API graphique bas niveau pour le rendu temps réel et la programmation GPU sous Windows.",
+        },
     },
 
     {
         TechName: "ImGUI",
         Category: "Library",
-        TechDesc: "Immediate Mode Graphical user interface library for fast and lightweight debugging tools and editor interfaces."
+        TechDesc:
+        {
+            en: "Immediate Mode Graphical user interface library for fast and lightweight debugging tools and editor interfaces.",
+            fr: "Bibliothèque d'interface graphique en mode immédiat pour des outils de debug et des interfaces d'éditeur rapides et légers.",
+        },
     },
 
     {
         TechName: " GitHub",
         Category: "Tool",
-        TechDesc: "Distributed version control and collaboration platform for code hosting, pull requests, and issue tracking. Includes GitHub Actions for CI/CD pipelines, enabling automated builds, testing, and deployment workflows integrated directly into repositories."
+        TechDesc:
+        {
+            en: "Distributed version control and collaboration platform for code hosting, pull requests, and issue tracking. Includes GitHub Actions for CI/CD pipelines, enabling automated builds, testing, and deployment workflows integrated directly into repositories.",
+            fr: "Plateforme de gestion de versions distribuée et de collaboration pour l'hébergement de code, les pull requests et le suivi des issues. Inclut GitHub Actions pour les pipelines CI/CD, qui automatisent builds, tests et déploiements directement depuis les dépôts.",
+        },
     },
 
     {
         TechName: " GitHubActions",
         Category: "Tool",
-        TechDesc: "CI/CD automation system integrated into GitHub repositories, used to define workflows for building, testing, and deploying applications. Supports event-driven pipelines triggered by pushes, pull requests, schedules, and manual dispatch, with reusable actions and self-hosted or hosted runners.",
+        TechDesc:
+        {
+            en: "CI/CD automation system integrated into GitHub repositories, used to define workflows for building, testing, and deploying applications. Supports event-driven pipelines triggered by pushes, pull requests, schedules, and manual dispatch, with reusable actions and self-hosted or hosted runners.",
+            fr: "Système d'automatisation CI/CD intégré aux dépôts GitHub, utilisé pour définir des workflows de build, de test et de déploiement. Les pipelines peuvent être déclenchés par des push, des pull requests, une planification ou manuellement, avec des actions réutilisables et des runners hébergés par GitHub ou auto-hébergés.",
+        },
     },
 ];
 
@@ -123,8 +191,9 @@ const GITHUB_ACTIONS = 16;
 
 // {
 //     ProjectName: "NAME OF THE FOLDER RELATED TO THAT PROJECT",
-//     DisplayName: "DISPLAY NAME FOR PROJECT CARD,
-//     Description: "SHORT DESC FOR PROJECT CARD,
+//     DisplayName: "DISPLAY NAME FOR PROJECT CARD" or { en: "...", fr: "..." },
+//     Description: { en: "SHORT DESC FOR PROJECT CARD", fr: "COURTE DESCRIPTION" },
+//     (page content: PageContent.html + optional PageContent.fr.html)
 //     TechStack: [TECH, STACK],
 //     Repo: "https://github.com/Yalt-167/REPO_NAME",
 // },
@@ -134,16 +203,24 @@ const PROJECTS =
 [
     { // procedural gen
         ProjectName: "ProceduralGeneration",
-        DisplayName: "Procedural Generation",
-        Description: "Voxel Generation project made in a week for a school project",
+        DisplayName: { en: "Procedural Generation", fr: "Génération procédurale" },
+        Description:
+        {
+            en: "Voxel Generation project made in a week for a school project",
+            fr: "Projet de génération de voxels réalisé en une semaine dans le cadre d'un projet scolaire",
+        },
         TechStack: [UNITY, CSHARP],
         Repo: "https://github.com/Yalt-167/ProjetGenerationProcedurale",
     },
 
     {  // tic tac toe
         ProjectName: "MultiplayerTicTacToe",
-        DisplayName: "Multiplayer TicaTacToe",
-        Description: "Real time multiplayer TicTacToe written in raw C++",
+        DisplayName: { en: "Multiplayer TicTacToe", fr: "Morpion multijoueur" },
+        Description:
+        {
+            en: "Real time multiplayer TicTacToe written in raw C++",
+            fr: "Morpion multijoueur en temps réel écrit en C++ pur",
+        },
         TechStack: [CPP, SFML, WINSOCK2, IMGUI],
         Repo: "https://github.com/Yalt-167/TicTacToeMultiplayer",
     },
@@ -151,15 +228,23 @@ const PROJECTS =
     { // Oath of the volcano
         ProjectName: "OathOfTheVolcano",
         DisplayName: "Oath Of The Volcano",
-        Description: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
+        Description:
+        {
+            en: "Small Unreal Engine roguelike in which the player is locked in a 60s time loop",
+            fr: "Petit roguelike sous Unreal Engine dans lequel le joueur est enfermé dans une boucle temporelle de 60 secondes",
+        },
         TechStack: [UNREAL_ENGINE],
         Repo: "https://github.com/AriLeGrand/Oath-of-the-volcano",
     }, 
 
     { // MultiplayerFPSPOC
         ProjectName: "MultiplayerFPS_POC",
-        DisplayName: "Multiplayer FPS POC",
-        Description: "Custom FPS multiplayer architecture using Unity & Netcode (POC)",
+        DisplayName: { en: "Multiplayer FPS POC", fr: "POC de FPS multijoueur" },
+        Description:
+        {
+            en: "Custom FPS multiplayer architecture using Unity & Netcode (POC)",
+            fr: "Architecture multijoueur sur mesure pour un FPS avec Unity et Netcode (POC)",
+        },
         TechStack: [UNITY, NETCODE, CSHARP],
         Repo: "https://github.com/Yalt-167/MultiplayerFPS_POC",
     },
@@ -174,8 +259,12 @@ const PROJECTS =
     
     { // RType
         ProjectName: "RType",
-        DisplayName: "R-Type game",
-        Description: "Up to 2 player (local) R-Type like written in C and SDL",
+        DisplayName: { en: "R-Type game", fr: "Jeu R-Type" },
+        Description:
+        {
+            en: "Up to 2 player (local) R-Type like written in C and SDL",
+            fr: "Jeu de type R-Type jusqu'à 2 joueurs (en local) écrit en C avec SDL",
+        },
         TechStack: [C, SDL],
         Repo: "https://github.com/MagnierHugo/C-RType",
     },
@@ -203,8 +292,12 @@ const PROJECTS =
 
     {
         ProjectName: "SpaceWar_TDD_CI-CD",
-        DisplayName: "TDD and CI-CD project",
-        Description: "Small project aiming at setting up an TDD and CI-CD architecture and understand their purpose",
+        DisplayName: { en: "TDD and CI-CD project", fr: "Projet TDD et CI/CD" },
+        Description:
+        {
+            en: "Small project aiming at setting up a TDD and CI-CD architecture and understand their purpose",
+            fr: "Petit projet visant à mettre en place une architecture TDD et CI/CD et à comprendre leur intérêt",
+        },
         TechStack: [UNITY, CSHARP, GITHUB, GITHUB_ACTIONS],
         Repo: "https://github.com/Yalt-167/SpaceWar_TDD_CI-CD",
     },

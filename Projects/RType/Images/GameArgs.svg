@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="GameArgs: one struct, passed by pointer">
+<title>GameArgs: one struct, passed by pointer</title>
+<defs><marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrowMuted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">GameArgs: one struct, passed by pointer</text>
+<text x="48" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">RECEIVE GameArgs*</text>
+<rect x="48" y="158" width="330" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<rect x="48" y="180" width="3" height="40" rx="1.5" fill="#00f5a0"/>
+<text x="72" y="207.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="20" font-weight="700" fill="#e8eaf0" text-anchor="start">HandleInputs()</text>
+<line x1="378" y1="200.0" x2="410" y2="200.0" stroke="#00f5a0" stroke-width="1.5" opacity="0.7"/>
+<rect x="48" y="290" width="330" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<rect x="48" y="312" width="3" height="40" rx="1.5" fill="#00f5a0"/>
+<text x="72" y="339.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="20" font-weight="700" fill="#e8eaf0" text-anchor="start">Update()</text>
+<line x1="378" y1="332.0" x2="410" y2="332.0" stroke="#00f5a0" stroke-width="1.5" opacity="0.7"/>
+<rect x="48" y="422" width="330" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<rect x="48" y="444" width="3" height="40" rx="1.5" fill="#00f5a0"/>
+<text x="72" y="471.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="20" font-weight="700" fill="#e8eaf0" text-anchor="start">Draw()</text>
+<line x1="378" y1="464.0" x2="410" y2="464.0" stroke="#00f5a0" stroke-width="1.5" opacity="0.7"/>
+<rect x="48" y="554" width="330" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<rect x="48" y="576" width="3" height="40" rx="1.5" fill="#00f5a0"/>
+<text x="72" y="603.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="20" font-weight="700" fill="#e8eaf0" text-anchor="start">Menus, QuitGame()</text>
+<line x1="378" y1="596.0" x2="410" y2="596.0" stroke="#00f5a0" stroke-width="1.5" opacity="0.7"/>
+<line x1="410" y1="200.0" x2="410" y2="596.0" stroke="#00f5a0" stroke-width="1.5" opacity="0.7"/>
+<line x1="410" y1="398" x2="446" y2="398" stroke="#00f5a0" stroke-width="2" marker-end="url(#arrowAccent)"/>
+<rect x="448" y="124" width="664" height="516" rx="16" fill="rgba(0,245,160,0.03)" stroke="#00f5a0" stroke-width="2"/>
+<text x="780" y="166" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="800" fill="#00f5a0" text-anchor="middle" letter-spacing="3">GAMEARGS</text>
+<text x="780" y="194" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="middle">280 bytes, passed as an 8-byte pointer</text>
+<rect x="468" y="214" width="302" height="200" rx="12" fill="#10131a" stroke="#3d9df5" stroke-width="1.5"/>
+<g fill="none" stroke="#3d9df5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="489" y="239" width="28" height="19" rx="3"/><path d="M503 258v5M497 264h12"/></g>
+<text x="530" y="257" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#3d9df5" text-anchor="start">SDL SDL</text>
+<rect x="698" y="239" width="54" height="26" rx="13" fill="none" stroke="#3d9df5" stroke-width="1"/>
+<text x="725.0" y="256" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#3d9df5" text-anchor="middle">136 B</text>
+<line x1="488" y1="286" x2="750" y2="286" stroke="#262c38" stroke-width="1"/>
+<circle cx="496" cy="316" r="3" fill="#3d9df5"/>
+<text x="510" y="322" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">window, renderer</text>
+<circle cx="496" cy="350" r="3" fill="#3d9df5"/>
+<text x="510" y="356" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Tex, Font</text>
+<circle cx="496" cy="384" r="3" fill="#3d9df5"/>
+<text x="510" y="390" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">animes</text>
+<rect x="790" y="214" width="302" height="200" rx="12" fill="#10131a" stroke="#f2a93b" stroke-width="1.5"/>
+<g fill="none" stroke="#f2a93b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="825" cy="251" r="13"/><path d="M825 243v8l6 4"/></g>
+<text x="852" y="257" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#f2a93b" text-anchor="start">GameState State</text>
+<rect x="1028" y="239" width="46" height="26" rx="13" fill="none" stroke="#f2a93b" stroke-width="1"/>
+<text x="1051.0" y="256" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#f2a93b" text-anchor="middle">64 B</text>
+<line x1="810" y1="286" x2="1072" y2="286" stroke="#262c38" stroke-width="1"/>
+<circle cx="818" cy="316" r="3" fill="#f2a93b"/>
+<text x="832" y="322" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Score, HighScore</text>
+<circle cx="818" cy="350" r="3" fill="#f2a93b"/>
+<text x="832" y="356" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">DeltaTime</text>
+<circle cx="818" cy="384" r="3" fill="#f2a93b"/>
+<text x="832" y="390" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Inputs</text>
+<rect x="468" y="426" width="302" height="200" rx="12" fill="#10131a" stroke="#4cc26a" stroke-width="1.5"/>
+<g fill="none" stroke="#4cc26a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M503 451l13 7-13 7-13-7z"/><path d="M490 464l13 7 13-7"/><path d="M490 470l13 7 13-7"/></g>
+<text x="530" y="469" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#4cc26a" text-anchor="start">Scene* Levels</text>
+<rect x="714" y="451" width="38" height="26" rx="13" fill="none" stroke="#4cc26a" stroke-width="1"/>
+<text x="733.0" y="468" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#4cc26a" text-anchor="middle">8 B</text>
+<line x1="488" y1="498" x2="750" y2="498" stroke="#262c38" stroke-width="1"/>
+<circle cx="496" cy="528" r="3" fill="#4cc26a"/>
+<text x="510" y="534" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Players</text>
+<circle cx="496" cy="562" r="3" fill="#4cc26a"/>
+<text x="510" y="568" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Projectiles</text>
+<circle cx="496" cy="596" r="3" fill="#4cc26a"/>
+<text x="510" y="602" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">Queue</text>
+<rect x="790" y="426" width="302" height="200" rx="12" fill="#10131a" stroke="#a77bf3" stroke-width="1.5"/>
+<g fill="none" stroke="#a77bf3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M813 472l-1-15 7 6 6-10 6 10 7-6-1 15z"/><path d="M814 476h22"/></g>
+<text x="852" y="469" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#a77bf3" text-anchor="start">Boss Boss</text>
+<rect x="1028" y="451" width="46" height="26" rx="13" fill="none" stroke="#a77bf3" stroke-width="1"/>
+<text x="1051.0" y="468" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="700" fill="#a77bf3" text-anchor="middle">72 B</text>
+<line x1="810" y1="498" x2="1072" y2="498" stroke="#262c38" stroke-width="1"/>
+<circle cx="818" cy="528" r="3" fill="#a77bf3"/>
+<text x="832" y="534" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">animation</text>
+<circle cx="818" cy="562" r="3" fill="#a77bf3"/>
+<text x="832" y="568" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">HP</text>
+<circle cx="818" cy="596" r="3" fill="#a77bf3"/>
+<text x="832" y="602" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="400" fill="#d3d8e2" text-anchor="start">LastTimeShot</text>
+<line x1="1114" y1="398" x2="1146" y2="398" stroke="#8f98a8" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrowMuted)"/>
+<text x="1150" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">GET ONLY WHAT THEY NEED</text>
+<rect x="1150" y="158" width="402" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="1172" y="207.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700"><tspan fill="#e8eaf0">RenderText(</tspan><tspan fill="#3d9df5">SDL*</tspan><tspan fill="#e8eaf0">, ...)</tspan></text>
+<rect x="1150" y="290" width="402" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="1172" y="339.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700"><tspan fill="#e8eaf0">TakeHit(..., </tspan><tspan fill="#f2a93b">GameState*</tspan><tspan fill="#e8eaf0">)</tspan></text>
+<rect x="1150" y="422" width="402" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="1172" y="471.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700"><tspan fill="#e8eaf0">ClearScene(</tspan><tspan fill="#4cc26a">Scene*</tspan><tspan fill="#e8eaf0">, ...)</tspan></text>
+<rect x="1150" y="554" width="402" height="84" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="1172" y="603.0" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700"><tspan fill="#e8eaf0">ShootBossProjectile(</tspan><tspan fill="#a77bf3">Boss*</tspan><tspan fill="#e8eaf0">, ...)</tspan></text>
+<rect x="48" y="664" width="1000" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="698" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">WHY ONE STRUCT</text>
+<circle cx="88" cy="731" r="12" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="88" y="736" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#00f5a0" text-anchor="middle">1</text>
+<text x="112" y="736" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#e8eaf0" text-anchor="start">Most systems need the renderer, the game state and the current level at once.</text>
+<circle cx="88" cy="767" r="12" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="88" y="772" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#00f5a0" text-anchor="middle">2</text>
+<text x="112" y="772" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#e8eaf0" text-anchor="start">Passing them one by one breaks the 80-column and 30-lines-per-function limits.</text>
+<circle cx="88" cy="803" r="12" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="88" y="808" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#00f5a0" text-anchor="middle">3</text>
+<text x="112" y="808" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#e8eaf0" text-anchor="start">One GameArgs* keeps signatures short, and new shared data needs no signature change.</text>
+<rect x="1080" y="664" width="472" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="1316" y="698" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle" letter-spacing="2">KEY POINTS</text>
+<circle cx="1108" cy="727" r="3" fill="#00f5a0"/>
+<text x="1122" y="732" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#e8eaf0" text-anchor="start">An 8-byte pointer instead of a 280-byte copy</text>
+<circle cx="1108" cy="755" r="3" fill="#00f5a0"/>
+<text x="1122" y="760" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#e8eaf0" text-anchor="start">Every system edits the same instance</text>
+<circle cx="1108" cy="783" r="3" fill="#00f5a0"/>
+<text x="1122" y="788" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#e8eaf0" text-anchor="start">Big structs (SDL, Scene, Boss...) also go by pointer</text>
+<circle cx="1108" cy="811" r="3" fill="#00f5a0"/>
+<text x="1122" y="816" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#e8eaf0" text-anchor="start">Trade-off: functions see more than they need</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">R-TYPE · GAMEARGS LAYOUT</text>
+</svg>

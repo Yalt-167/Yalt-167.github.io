@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Portfolio: Riviale Antoine</title>
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Portfolio: Riviale Antoine</title>
+
     <link rel="stylesheet" href="Style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,49 +14,48 @@
 </head>
 <body>
     <main>
+        <div id="langSwitch" class="site-lang"></div>
+
         <section class="hero">
             <div class="hero-content">
                 <h1>Riviale Antoine</h1>
-                <h2>Gameplay Programmer / Engine Developer</h2>
-                <p>
-                    Gameplay Programmer / Engine Developer focused on building <b>performant</b> and <b>immersive</b> real-time systems and engaging gameplay features.<br><br>
+                <h2 data-i18n="hero.role"></h2>
+                <p data-i18n-html="hero.intro"></p>
 
-                    Experienced with <b>Unity</b>, <b>Unreal Engine</b>, and low-level languages, I have a strong interest in understanding engine-level behavior and <b>memory/performance tradeoffs</b>.
-                    I am passionate about developing <b>efficient</b> and <b>scalable</b> systems for high-performance, reliable software.<br><br>
-                    
-                    Strong <b>communication</b> and <b>problem-solving</b> skills with the ability to collaborate effectively.<br><br>
-                </p>
-
-                <h3>This page is a work in progress and most projects aren't there yet. They're still accessible on my github page tho :)</h3>
+                <h3 data-i18n="hero.wip"></h3>
             </div>
         </section>
 
         <section class="projects-section">
-            <h2 class="section-title">Featured Projects</h2>
+            <h2 class="section-title" data-i18n="projects.title"></h2>
 
             <div id="projectFilters" class="project-filters"></div>
             <div id="projectsGrid" class="projects-grid"></div>
         </section>
 
         <section class="contact-section">
-            <h2>Contact</h2>
+            <h2 data-i18n="contact.title"></h2>
             <div class="contact-links">
                 <a href="https://github.com/Yalt-167" target="_blank">GitHub</a>
                 <a href="https://www.linkedin.com/in/antoine-riviale-a04a35293/" target="_blank" >LinkedIn</a>
-                <a href="javascript:CopyEmail();">Copy Email</a>
+                <a href="javascript:CopyEmail();" data-i18n="contact.copyEmail"></a>
             </div>
         </section>
     </main>
+    <script src="I18n.js"></script>
     <script src="Data.js"></script>
     <script src="BuildProjectCardsGrid.js"></script>
     <script>
     function CopyEmail()
     {
         navigator.clipboard.writeText("antoine.riviale@gmail.com")
-            .then(() => alert("Email copied :)"))
-            .catch((error) => alert("Failed to copy email:", error))
+            .then(() => alert(T("contact.copied")))
+            .catch((error) => alert(`${T("contact.copyFailed")}: ${error}`))
         ;
     }
+
+    ApplyStaticTranslations();
+    document.getElementById("langSwitch").innerHTML = MakeLanguageSwitch();
     </script>
 </body>
-</html> 
+</html>

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Projectiles: a fixed pool, no allocation">
+<title>Projectiles: a fixed pool, no allocation</title>
+<defs><marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc26a"/></marker><marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef5b5b"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">Projectiles: a fixed pool, no allocation</text>
+<text x="48" y="150" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="20" font-weight="700"><tspan fill="#00f5a0">Projectile* Projectiles</tspan><tspan fill="#8f98a8" font-weight="400" dx="16">// MAX_PROJECTILES = 100</tspan></text>
+<text x="48" y="180" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="start">One array per level, allocated once by InitProjectiles()</text>
+<rect x="48" y="226" width="110" height="100" rx="10" fill="rgba(61,157,245,0.12)" stroke="#3d9df5" stroke-width="1.5"/>
+<rect x="86.0" y="256" width="34" height="10" rx="5" fill="#3d9df5"/>
+<text x="103.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3d9df5" text-anchor="middle">player</text>
+<text x="103.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[0]</text>
+<rect x="174" y="226" width="110" height="100" rx="10" fill="rgba(167,123,243,0.12)" stroke="#a77bf3" stroke-width="1.5"/>
+<rect x="212.0" y="256" width="34" height="10" rx="5" fill="#a77bf3"/>
+<text x="229.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#a77bf3" text-anchor="middle">boss</text>
+<text x="229.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[1]</text>
+<rect x="300" y="226" width="110" height="100" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="355.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<text x="355.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[2]</text>
+<rect x="426" y="226" width="110" height="100" rx="10" fill="rgba(61,157,245,0.12)" stroke="#3d9df5" stroke-width="1.5"/>
+<rect x="464.0" y="256" width="34" height="10" rx="5" fill="#3d9df5"/>
+<text x="481.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3d9df5" text-anchor="middle">player</text>
+<text x="481.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[3]</text>
+<rect x="552" y="226" width="110" height="100" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="607.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<text x="607.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[4]</text>
+<rect x="678" y="226" width="110" height="100" rx="10" fill="rgba(167,123,243,0.12)" stroke="#a77bf3" stroke-width="1.5"/>
+<rect x="716.0" y="256" width="34" height="10" rx="5" fill="#a77bf3"/>
+<text x="733.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#a77bf3" text-anchor="middle">boss</text>
+<text x="733.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[5]</text>
+<rect x="804" y="226" width="110" height="100" rx="10" fill="rgba(61,157,245,0.12)" stroke="#3d9df5" stroke-width="1.5"/>
+<rect x="842.0" y="256" width="34" height="10" rx="5" fill="#3d9df5"/>
+<text x="859.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3d9df5" text-anchor="middle">player</text>
+<text x="859.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[6]</text>
+<rect x="930" y="226" width="110" height="100" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="985.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<text x="985.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[7]</text>
+<rect x="1056" y="226" width="110" height="100" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="1111.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<text x="1111.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[8]</text>
+<rect x="1182" y="226" width="110" height="100" rx="10" fill="rgba(167,123,243,0.12)" stroke="#a77bf3" stroke-width="1.5"/>
+<rect x="1220.0" y="256" width="34" height="10" rx="5" fill="#a77bf3"/>
+<text x="1237.0" y="300" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#a77bf3" text-anchor="middle">boss</text>
+<text x="1237.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[9]</text>
+<rect x="1308" y="226" width="110" height="100" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="1363.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<text x="1363.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[10]</text>
+<rect x="1434" y="226" width="110" height="100" rx="10" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="1489.0" y="282.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="400" fill="#8f98a8" text-anchor="middle">...</text>
+<text x="1489.0" y="350" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">[99]</text>
+<text x="355.0" y="212" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">next shot</text>
+<path d="M349.0 218 L361.0 218 L355.0 224z" fill="#00f5a0"/>
+<rect x="48" y="392" width="488" height="248" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="88" cy="436" r="16" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="88" y="441" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">1</text>
+<text x="116" y="444" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#e8eaf0" text-anchor="start">Shoot</text>
+<text x="76" y="488" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#00f5a0" text-anchor="start">SeekAvailableProjectile()</text>
+<text x="76" y="518" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="start">takes the first free slot and resets it</text>
+<rect x="132" y="550" width="120" height="56" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="192.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<path d="M264 578 L318 578" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="332" y="550" width="120" height="56" rx="10" fill="rgba(61,157,245,0.12)" stroke="#3d9df5" stroke-width="1.5"/>
+<text x="392.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3d9df5" text-anchor="middle">player</text>
+<rect x="556" y="392" width="488" height="248" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="596" cy="436" r="16" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="596" y="441" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">2</text>
+<text x="624" y="444" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#e8eaf0" text-anchor="start">Leaves the screen</text>
+<text x="584" y="488" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#00f5a0" text-anchor="start">Active = false;</text>
+<text x="584" y="518" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="start">the slot is free again</text>
+<rect x="640" y="550" width="120" height="56" rx="10" fill="rgba(167,123,243,0.12)" stroke="#a77bf3" stroke-width="1.5"/>
+<text x="700.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#a77bf3" text-anchor="middle">boss</text>
+<path d="M772 578 L826 578" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="840" y="550" width="120" height="56" rx="10" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="900.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="middle">free</text>
+<rect x="1064" y="392" width="488" height="248" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<circle cx="1104" cy="436" r="16" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="1104" y="441" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="middle">3</text>
+<text x="1132" y="444" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#e8eaf0" text-anchor="start">Pool full</text>
+<text x="1092" y="488" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#00f5a0" text-anchor="start">return &amp;projs[0];</text>
+<text x="1092" y="518" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="start">slot 0 is recycled instead of crashing</text>
+<rect x="1148" y="550" width="120" height="56" rx="10" fill="rgba(167,123,243,0.12)" stroke="#a77bf3" stroke-width="1.5"/>
+<text x="1208.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#a77bf3" text-anchor="middle">[0] boss</text>
+<path d="M1280 578 L1334 578" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="1348" y="550" width="120" height="56" rx="10" fill="rgba(61,157,245,0.12)" stroke="#3d9df5" stroke-width="1.5"/>
+<text x="1408.0" y="584.0" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="600" fill="#3d9df5" text-anchor="middle">[0] player</text>
+<rect x="48" y="664" width="1504" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="700" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">KEY POINTS</text>
+<circle cx="80" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="96" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">No malloc or free while playing: the pool is allocated once per level</text>
+<circle cx="832" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="848" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Finding a slot is a simple scan over 100 entries</text>
+<circle cx="80" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="96" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">ShotByPlayer decides who a projectile can hurt</text>
+<circle cx="832" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="848" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Shots are freed when they leave either side of the screen</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">R-TYPE · PROJECTILE POOL</text>
+</svg>

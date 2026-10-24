@@ -1,0 +1,345 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+
+    <div class="project-text">
+        <p>
+            Ce projet scolaire est une recréation du shoot 'em up classique R-Type, écrite en C
+            avec SDL pour le rendu, la gestion des entrées et l'audio.
+            Jusqu'à deux joueurs peuvent jouer en local, au clavier ou à la manette, à travers une série de niveaux composés de vagues d'ennemis et d'un boss final.
+        </p>
+
+        <p>
+            Pour ce premier projet en C, l'objectif était d'apprendre les bases de la programmation de jeux bas niveau
+            (gestion manuelle de la mémoire, boucle de jeu, collisions, animations) tout en respectant des contraintes de code très strictes,
+            comme un maximum de 5 fonctions par fichier, 30 lignes par fonction et 80 caractères par ligne.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <img
+            src="https://github.com/user-attachments/assets/c14037f4-8164-4f0b-82f1-7d75becbfb9d"
+            alt="Capture d'écran du gameplay de R-Type"
+            width="100%"
+        >
+    </div>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Contenu</h2>
+
+    <div class="project-text">
+        <p><b>Point d'entrée et boucle de jeu</b></p>
+        <p>
+            Commençons par le point d'entrée du programme : int main(int argc, char* argv[]).
+            On initialise d'abord SDL et on regroupe toutes les données liées à SDL (fenêtre, renderer, textures, sons) dans une struct.
+            On initialise ensuite la struct GameArgs, qui contient tous les éléments centraux du jeu (données SDL, état de la partie, niveaux et boss).
+        </p>
+        <p>
+            Tout regrouper dans GameArgs était un choix délibéré pour composer avec les contraintes de code.
+            La plupart des systèmes ont besoin de plusieurs de ces éléments à la fois (le renderer, l'état de la partie, le niveau en cours...),
+            et les passer un par un aurait vite fait exploser la limite de 80 caractères par ligne et grignoté le budget de 30 lignes par fonction
+            avec des signatures et des appels sur plusieurs lignes. Avec une seule struct passée partout, les signatures restent courtes, et ajouter une nouvelle donnée partagée
+            ne demande pas de modifier toutes les fonctions de la chaîne d'appels.
+        </p>
+        <p>
+            GameArgs est passée par pointeur plutôt que par valeur. La struct est assez volumineuse (tous les handles et textures SDL,
+            tout l'état de la partie, les niveaux et le boss) : la passer par valeur la copierait entièrement à chaque appel, plusieurs fois par frame.
+            Cela garantit aussi que toutes les fonctions travaillent sur la même instance, si bien qu'une modification faite au fond de la chaîne d'appels n'est jamais perdue silencieusement sur une copie.
+            La même règle s'applique à toutes les autres structs conséquentes (SDL, GameState, Scene, Player, Enemy...), tandis que les petites comme Wave ou Bonus sont toujours passées par valeur.
+        </p>
+        <p>
+            Le revers de cette approche, c'est que les fonctions ont accès à plus que ce dont elles ont réellement besoin, ce qui masque leurs vraies dépendances.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <a href="RType/Images/GameArgs.fr.svg" target="_blank" title="Ouvrir en taille réelle">
+            <img
+                src="RType/Images/GameArgs.fr.svg"
+                alt="Schéma de la struct GameArgs : ses membres SDL, GameState, Levels et Boss, les systèmes qui reçoivent un pointeur vers GameArgs et les fonctions qui n'en reçoivent qu'un membre"
+                width="100%" height="100%"
+            >
+        </a>
+    </div>
+
+    <div class="project-text">
+        <p>
+            Une fois que le menu principal a renvoyé le nombre de joueurs, le jeu exécute chaque niveau avec une boucle classique :
+            mise à jour de l'horloge, lecture des entrées, mise à jour, affichage, puis vérification de la victoire ou de la défaite.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <a href="RType/Images/GameLoop.fr.svg" target="_blank" title="Ouvrir en taille réelle">
+            <img
+                src="RType/Images/GameLoop.fr.svg"
+                alt="Schéma de la boucle de jeu : l'initialisation, les six étapes d'une frame répétées pour chacun des 4 niveaux, et ce qui se passe quand un niveau est gagné ou perdu"
+                width="100%" height="100%"
+            >
+        </a>
+    </div>
+
+<div><pre><code class="language-c">
+int main(int argc, char* argv[])
+{
+    SDL sdlStruct = StartSDL();
+    Scene* Levels = CreateLevels(LEVEL_COUNT, &sdlStruct);
+    GameArgs gameArgs = { sdlStruct, InitGameState(&sdlStruct),
+        Levels, CreateBoss(sdlStruct.Tex.Boss) };
+    int playerCount = StartMenu(&gameArgs);
+    Tick(&gameArgs.State);
+    PlaySound(SONG, &gameArgs.SDL);
+
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        gameArgs.State.CurLVL = i + 1;
+        if (playerCount == 1) gameArgs.Levels[i].Players[1].Active = false;
+        gameArgs.Levels[i].Time = gameArgs.State.CurrentTime;
+        while (gameArgs.State.Continue) {
+            Tick(&gameArgs.State);
+
+            HandleInputs(&gameArgs);
+            Update(&gameArgs, &gameArgs.Levels[i]);
+            Draw(&gameArgs, &gameArgs.Levels[i]);
+            SDL_Delay(FRAMERATE);
+
+            int endGame = CheckEndGame(&gameArgs, &gameArgs.Levels[i]);
+            if (endGame > 0) { break; }
+            else if (endGame < 0) { gameArgs.State.Continue = false; }
+        }
+    }
+
+    return EndScreen(&gameArgs);
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p>
+            Chaque déplacement est multiplié par un delta time calculé dans Tick(), pour que la vitesse du jeu ne dépende pas du framerate.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+static void Tick(GameState* state)
+{
+    state->DeltaTime = (SDL_GetTicks() - state->CurrentTime) / 1000;
+    state->CurrentTime = SDL_GetTicks();
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Entrées : clavier et manettes</b></p>
+        <p>
+            Les entrées sont réinitialisées à chaque frame puis regroupées dans une struct PlayerInput propre à chaque joueur (direction + tir).
+            Les touches du clavier passent par une InputMap par joueur, ce qui permet de les réassigner dans le menu dédié (qu'on ouvre et ferme avec Échap).
+            Les sticks des manettes ne sont lus que si le clavier n'a pas déjà fourni de direction, ce qui permet aux deux périphériques de cohabiter
+            sans se contredire. Les manettes sont redétectées dès que leur nombre change, on peut donc en brancher une en pleine partie.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+void HandleJoystick(InputsSummary* inputs)
+{
+    SDL_GameController* controller = SDL_GameControllerOpen(0);
+
+    for (int i = 0; i < PLAYER_CNT; i++) {
+        PlayerInput* playerInput = &inputs->PlayerInput[i];
+        if (playerInput->DirX == 0) {
+            playerInput->DirX = ControllerAxisToInt(controller,
+                i ? SDL_CONTROLLER_AXIS_RIGHTX : SDL_CONTROLLER_AXIS_LEFTX);
+        }
+
+        if (playerInput->DirY == 0) {
+            playerInput->DirY = ControllerAxisToInt(controller,
+                i ? SDL_CONTROLLER_AXIS_RIGHTY : SDL_CONTROLLER_AXIS_LEFTY);
+        }
+    }
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Vagues et file d'ennemis</b></p>
+        <p>
+            Chaque niveau possède une file d'ennemis générée à l'avance. Chaque ennemi reçoit une hauteur aléatoire et a une chance sur 4 de lâcher un bonus,
+            et plus il est loin dans la file, plus il a de points de vie : la difficulté augmente donc au fil du niveau.
+        </p>
+        <p>
+            Les ennemis sont ensuite répartis en vagues de taille aléatoire. Chaque vague stocke le nombre d'ennemis qu'elle libère et le temps d'attente
+            avant la suivante (les grosses vagues laissent ensuite plus de répit aux joueurs).
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+Wave* CreateWaves(int nbrEnemies, int maxEnemiesPerWave, int baseWait, SDL* sdl)
+{
+    ...
+    while (nbrEnemies > 0) {
+        enemiesInWave = RdmInt(1, nbrEnemies > maxEnemiesPerWave ?
+            maxEnemiesPerWave : nbrEnemies, true);
+        ...
+    }
+
+    Wave* waves = malloc(waveNumber * sizeof(Wave));
+    for (int waveIndex = 0; waveIndex < waveNumber; waveIndex++) {
+        waves[waveIndex] = (Wave){ enemies[waveIndex],
+            baseWait + baseWait / 3 * enemies[waveIndex],
+            waveIndex == waveNumber - 1 };
+    }
+    ...
+}
+
+void SpawnEnemies(Scene* scene)
+{
+    if ((scene->Time + scene->WaitTime) <= SDL_GetTicks() && !scene->waveEnd) {
+        Wave wave = PopWave(scene);
+        scene->ActiveEnemies += wave.nbrEnemies;
+        scene->WaitTime = wave.Wait;
+        scene->Time = SDL_GetTicks();
+        scene->waveEnd = wave.isEnd;
+    }
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p>
+            Un niveau est gagné quand sa dernière vague est apparue et que tous les ennemis actifs sont morts (et, au dernier niveau, quand le boss est vaincu).
+            Il est perdu quand les deux joueurs sont morts.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <img
+            src="https://github.com/user-attachments/assets/3d90e261-bc5f-478b-8c02-8ae4a9017932"
+            alt="Capture d'écran du combat contre le boss de R-Type"
+            width="100%"
+        >
+    </div>
+
+    <div class="project-text">
+        <p><b>Projectiles : un pool fixe</b></p>
+        <p>
+            Plutôt que d'allouer un projectile à chaque tir, chaque scène possède un tableau fixe de MAX_PROJECTILES.
+            Tirer revient simplement à prendre le premier emplacement inactif et à le réinitialiser. Les projectiles qui sortent de l'écran sont marqués inactifs et redeviennent disponibles.
+            Si le pool est un jour épuisé, le premier projectile est recyclé pour que le jeu reste dans un état sain au lieu de planter.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <a href="RType/Images/ProjectilePool.fr.svg" target="_blank" title="Ouvrir en taille réelle">
+            <img
+                src="RType/Images/ProjectilePool.fr.svg"
+                alt="Schéma du pool de projectiles : un tableau fixe de 100 emplacements partagé par les tirs du joueur et du boss, et l'effet d'un tir, d'une sortie d'écran et d'un pool plein"
+                width="100%" height="100%"
+            >
+        </a>
+    </div>
+
+<div><pre><code class="language-c">
+static Projectile* SeekAvailableProjectile(Projectile* projs) {
+    for (int i = 0; i < MAX_PROJECTILES; i++)
+    {
+        if (!projs[i].Active) return &projs[i];
+    }
+    return &projs[0];
+    // in case none is available keep the game in a somewhat healthy state by kidnapping an active projectile
+}
+
+void ShootPlayerProjectile(Player* player, Projectile* projs,
+    GameState* state, GameArgs* args)
+{
+    PlaySound(BLASTER, &args->SDL);
+    Projectile* projectile = SeekAvailableProjectile(projs);
+    projectile->X = player->X + player->Width;
+    projectile->Y = player->Y + player->Height / 2;
+    projectile->DirY = 0;
+    projectile->DirX = 1;
+    projectile->Active = true;
+    projectile->ShotByPlayer = true;
+
+    state->ShotFired++;
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Collisions</b></p>
+        <p>
+            Chaque entité peut être convertie en SDL_Rect, et les collisions sont des tests AABB via SDL_HasIntersection.
+            Le flag ShotByPlayer des projectiles détermine qui ils peuvent toucher, ce qui permet aux joueurs et aux ennemis de partager le même pool.
+            Quand un ennemi meurt, une animation d'explosion et un son sont joués, un bonus peut apparaître (vie ou vitesse supplémentaire)
+            et les points de l'ennemi sont ajoutés au score.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+// returns how much point for the kill else 0 as no kill
+int CheckEnemyProjCollision(GameState* state, Enemy* enemy,
+    Scene* scene, SDL* sdl)
+{
+    Projectile* projs = scene->Projectiles;
+
+    SDL_Rect enemyRect = EnemyAsRect(enemy);
+    for (int proj = 0; proj < MAX_PROJECTILES; proj++)
+    {
+        Projectile* curProj = &projs[proj];
+        if (!curProj->Active) { continue; }
+        SDL_Rect projRect = ProjectileAsRect(curProj);
+        if (SDL_HasIntersection(&projRect, &enemyRect) && curProj->ShotByPlayer)
+        {
+            curProj->Active = false;
+            enemy->HP -= 1;
+            if (enemy->HP <= 0) {
+                SDL_Rect rect = { enemy->X, enemy->Y, BOOM_WIDTH, BOOM_HEIGTH };
+                PlaySound(KABOOM, sdl);
+                sdl->nbrAnimation++;
+                sdl->animes = AddAnimation(sdl, sdl->Tex.Boom, BOOM_FRAMES,
+                    BOOM_WAIT_BETWEEN_FRAMES, rect);
+                if (enemy->DropBoost)
+                    SpawnBonus(scene->Bonuses, enemy->X, enemy->Y);
+                return enemy->AwardedPoints;
+            }
+        }
+    }
+    return 0;
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Animations</b></p>
+        <p>
+            Une animation est une liste de textures, une frame courante et un délai entre les frames.
+            Les animations à usage unique, comme les explosions, sont stockées dans un tableau dynamique : elles y sont ajoutées à leur apparition,
+            avancent à chaque frame et sont retirées une fois leur dernière frame jouée.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+void RunAnimations(SDL* sdl)
+{
+    for (int index = 0; index < sdl->nbrAnimation; index++)
+    {
+        Animation* anime = &sdl->animes[index];
+        if (anime->curFrame < anime->nbrFrames) { RunAnimation(sdl, anime); }
+        else {
+            sdl->nbrAnimation--;
+            sdl->animes = DeleteAnimation(sdl, index);
+        }
+    }
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Sauvegarde du score</b></p>
+        <p>
+            À la fin de la partie, l'écran de fin affiche le score, le meilleur score et le nombre de tirs.
+            Le meilleur score est sauvegardé en écrivant l'int brut dans un fichier binaire, puis rechargé au lancement (0 par défaut si aucune sauvegarde n'existe).
+        </p>
+    </div>
+
+    <div class="project-text">
+        <p><b>Bilan</b></p>
+        <p>
+            Avec le recul, je ferais certaines choses différemment : la file d'ennemis et la liste d'animations sont réallouées à chaque suppression d'un élément,
+            alors qu'un swap-remove ou un pool fixe (comme pour les projectiles) éviterait complètement ces allocations.
+            Ce projet a malgré tout été une excellente introduction à la gestion manuelle de la mémoire et à la structure d'un jeu complet sans moteur.
+        </p>
+    </div>
+</section>

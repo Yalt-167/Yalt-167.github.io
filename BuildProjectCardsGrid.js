@@ -3,8 +3,8 @@ const ALL = null;
 
 const FILTER_GROUPS =
 [
-    { Label: "Engine", Category: "Engine", AllowNone: true },
-    { Label: "Language", Category: "Language", AllowNone: false },
+    { LabelKey: "filters.engine", Category: "Engine", AllowNone: true },
+    { LabelKey: "filters.language", Category: "Language", AllowNone: false },
 ];
 
 const activeFilters = {}; // Category -> tech index | NO_ENGINE | ALL
@@ -13,10 +13,10 @@ function MakeProjectCard(project, index)
 {
     return `
             <a class="project-card" href="Projects/ProjectPageTemplate.html?id=${index}">
-                <img src="Projects/${project.ProjectName}/Images/${project.ProjectName}.png" alt="Image not found">
+                <img src="Projects/${project.ProjectName}/Images/${project.ProjectName}.png" alt="${T("card.imageMissing")}">
                 <div class="project-info">
-                    <h3>${project.DisplayName}</h3>
-                    <p>${project.Description}</p>
+                    <h3>${Localize(project.DisplayName)}</h3>
+                    <p>${Localize(project.Description)}</p>
                 </div>
             </a>
             `;
@@ -51,7 +51,7 @@ function BuildProjectCardsGrid()
         .map((project, index) => ProjectMatchesFilters(project) ? MakeProjectCard(project, index) : "")
         .join("");
 
-    document.getElementById("projectsGrid").innerHTML = cards || `<p class="no-projects">No project matches these filters.</p>`;
+    document.getElementById("projectsGrid").innerHTML = cards || `<p class="no-projects">${T("filters.noMatch")}</p>`;
 }
 
 function MakeFilterButton(category, value, label)
@@ -65,16 +65,16 @@ function BuildFilterGroup(group)
     // only offer techs that at least one project actually uses
     const usedTechs = [...new Set(PROJECTS.flatMap(project => GetProjectTechsOfCategory(project, group.Category)))];
 
-    const buttons = [MakeFilterButton(group.Category, ALL, "All")];
+    const buttons = [MakeFilterButton(group.Category, ALL, T("filters.all"))];
     for (const tech of usedTechs)
         buttons.push(MakeFilterButton(group.Category, tech, TECH_STACK[tech].TechName.trim()));
 
     if (group.AllowNone && PROJECTS.some(project => GetProjectTechsOfCategory(project, group.Category).length === 0))
-        buttons.push(MakeFilterButton(group.Category, NO_ENGINE, "No engine"));
+        buttons.push(MakeFilterButton(group.Category, NO_ENGINE, T("filters.noEngine")));
 
     return `
             <div class="filter-group">
-                <span class="filter-label">${group.Label}</span>
+                <span class="filter-label">${T(group.LabelKey)}</span>
                 ${buttons.join("")}
             </div>
             `;

@@ -1,0 +1,269 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p><b>Oath Of The Volcano</b></p>
+
+    <p class="indented-text-content">
+        Il s'agit d'un petit roguelike réalisé sous Unreal Engine dans le cadre d'un projet scolaire (4 semaines).
+        Les contraintes étaient { parties de 60 s, vue à la première personne, gameplay nerveux } ;
+        nous avons choisi de faire un jeu où le joueur est enfermé dans une boucle temporelle de 60 secondes et doit vaincre le boss dans ce laps de temps.
+        Le joueur peut trouver des coffres dispersés sur la carte pour devenir plus fort.
+        Chaque amélioration de statistique est conservée à la mort ou à la fin du cycle de 60 secondes.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Contenu</h2>
+
+
+<div id="editorTabs" class="editor-tabs">
+    <div class="tab-strip" role="tablist">
+        <button role="tab" aria-selected="true" aria-controls="tab-0" class="tab-btn active">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Gestion de la boucle de jeu</span>
+        </button>
+        <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Système de combat</span>
+        </button>
+        <button role="tab" aria-selected="false" aria-controls="tab-1" class="tab-btn">
+            <span class="tab-icon">#</span>
+            <span class="tab-name">Réassignation des touches</span>
+        </button>
+    </div>
+</div>
+
+<br>
+
+<div class="tab-panel" id="tab-0" role="tabpanel">
+<div class="project-text">
+    <p>
+        L'architecture du déroulement de la partie repose sur des managers singletons centralisés, combinés
+        à des Blueprint Interfaces et des Event Dispatchers pour garder les systèmes de gameplay découplés
+        et synchronisés.
+    </p>
+
+    <p>
+        Une Blueprint Interface nommée IGameFlowAffected définit le contrat commun à tous les
+        systèmes de gameplay qui réagissent aux événements du déroulement de la partie.
+    </p>
+
+    <p>
+        L'interface expose :
+        OnPlayerSpawn(), OnGameReset(), OnGamePaused() et OnGameResumed().
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/GameLoopManagement/IGameFlowAffectedInterface.png"
+        alt="OathOfTheVolcano/Images/GameLoopManagement/IGameFlowAffectedInterface.png"
+        height="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Les entités de gameplay implémentent cette interface pour s'initialiser à l'apparition du joueur,
+        réinitialiser leur état interne au redémarrage d'un cycle et suspendre ou reprendre leur logique lors des pauses.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/GameLoopManagement/WhoImplementsIGameFlowAffected.png"
+        alt="OathOfTheVolcano/Images/GameLoopManagement/WhoImplementsIGameFlowAffected.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        MainGameInstance est le manager de plus haut niveau à l'exécution. Comme la GameInstance
+        existe pendant toute la durée de vie de l'application, elle sert de singleton stable
+        chargé de gérer le cycle de vie du joueur et d'initialiser le déroulement global de la partie.
+    </p>
+
+    <p>
+        Quand le joueur apparaît ou est retiré, des Event Dispatchers diffusent l'événement à tous
+        les systèmes abonnés. Ce pattern Observer évite les dépendances directes entre les systèmes de gameplay.
+    </p>
+
+    <p>
+        MainGameMode gère la logique des cycles de jeu, comme les réinitialisations et le système de pause.
+        Le système de pause surveille les entrées du joueur pour basculer entre pause et reprise, tandis que la réinitialisation est gérée directement par MainGameMode.
+        Tout cela est ensuite propagé aux systèmes de gameplay concernés grâce au pattern Observer.
+
+        Comme il n'existe qu'un seul GameMode par partie, il sert de singleton de gameplay
+        faisant autorité, chargé de synchroniser les événements à l'exécution.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/GameLoopManagement/GameFlowOverview.png"
+        alt="OathOfTheVolcano/Images/GameLoopManagement/GameFlowOverview.png"
+        height="100%" width="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Le système de réinitialisation utilise un SetTimerByEvent en boucle pour rythmer les cycles de jeu.
+        À chaque déclenchement, le GameMode diffuse les événements de réinitialisation via des Event Dispatchers afin que
+        chaque entité de gameplay concernée ajuste son état de manière indépendante.
+    </p>
+
+    <p>
+        La boucle de jeu s'appuie sur des interfaces pour garantir que chaque acteur concerné respecte bien le contrat du système, et sur des Event Dispatchers
+        (pattern Observer) pour garder un code propre et éviter les dépendances.
+        Cette architecture permet de gérer correctement les systèmes de gameplay sans leur imposer de dépendance envers MainGameMode.
+    </p>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-1" role="tabpanel" hidden>
+<div class="project-text">
+    <p>
+        Le système de combat repose sur une architecture pilotée par interface, qui découple la détection des coups
+        des acteurs touchés. N'importe quel acteur peut recevoir des dégâts en implémentant
+        l'interface IHittable, sans modifier le système de combat lui-même.
+    </p>
+    <p>
+        L'interface définit un contrat standard contenant :
+        void OnHit(float Damage, FVector Direction, Player Instigator) et
+        bool IsRelevantToComboSystem().
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/CombatSystem/IHittableInterfaceDiagram.png"
+        alt="OathOfTheVolcano/Images/CombatSystem/IHittableInterfaceDiagram.png"
+        width="100%" height="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Quand le joueur attaque, une animation d'attaque est jouée et la hitbox de l'arme est activée pendant les frames correspondantes de l'animation.
+    </p>
+
+    <p>
+        Pour chaque acteur en chevauchement, on vérifie s'il implémente l'interface IHittable.
+
+        Si c'est le cas, le système de combat appelle
+        IsRelevantToComboSystem() pour savoir si le coup doit compter
+        dans le combo du joueur.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/CombatSystem/CombatSystemFlow.png"
+        alt="OathOfTheVolcano/Images/CombatSystem/CombatSystemFlow.png"
+        width="100%" height="100%"
+    >
+</div>
+
+<div class="project-text">
+
+    <p>
+        Ainsi, certains acteurs comme les ennemis font progresser le combo,
+        tandis que d'autres objets peuvent recevoir des dégâts sans influencer le score.
+    </p>
+</div>
+
+
+<div class="project-text">
+    <p>
+        Une fois le coup validé, le compteur de combo est mis à jour et OnHit() est appelé sur la cible.
+        La cible reste responsable de la gestion de ses propres dégâts, réactions et effets de gameplay.
+    </p>
+
+    <p>
+        Cela respecte le principe ouvert/fermé : on peut ajouter de nouveaux acteurs pouvant subir des dégâts
+        en implémentant simplement IHittable, sans aucune modification du système de combat.
+    </p>
+</div>
+
+<div class="project-text">
+    <p>
+        Utiliser une interface (IHittable) permet à n'importe quel acteur de pouvoir être touché en implémentant simplement deux méthodes,
+        ce qui garde le système de combat ouvert à l'extension et fermé à la modification.
+    </p>
+
+    <p>
+        Le système de combat est ainsi découplé des classes d'acteurs concrètes : tout acteur qui implémente l'interface peut réagir aux coups et, s'il le souhaite, participer au système de combo.
+    </p>
+
+    <p>
+        Cette architecture pilotée par interface sépare la logique de combat des classes d'acteurs, ce qui rend le système évolutif et extensible : de nouveaux ennemis ou objets peuvent s'y intégrer facilement.
+        Si un changement est nécessaire, il suffit de modifier l'interface puis d'adapter les acteurs qui l'implémentent.
+        L'interface impose le respect du contrat : une classe d'acteur qui l'implémente ne pourra pas compiler tant qu'elle n'en implémente pas tous les membres.
+    </p>
+</div>
+
+
+</div>
+
+<div class="tab-panel" id="tab-2" role="tabpanel" hidden>
+<div class="project-text">
+    <p>
+        Le système de réassignation des touches est généré dynamiquement à partir des paramètres d'entrée sauvegardés du joueur.
+        Plutôt que de créer manuellement une entrée d'interface pour chaque action, le menu est construit directement à partir
+        des mappings d'entrée enregistrés, ce qui garantit que l'interface reflète toujours la configuration actuelle des contrôles.
+        <br>
+        Le système récupère les paramètres d'entrée du joueur, en extrait toutes les lignes de mapping et
+        les parcourt pour découvrir chaque action réassignable.
+        <br>
+        Pour chaque mapping trouvé, un widget Rebind Button dédié est instancié et ajouté
+        automatiquement au menu.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/RebindingSystem/RebindSystemOverview.png"
+        alt="OathOfTheVolcano/Images/RebindingSystem/RebindSystemOverview.png"
+        width="100%" height="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Chaque Rebind Button contient les données et les méthodes nécessaires pour modifier un mapping précis.
+        Le menu reste ainsi générique et le widget parent ne contient aucune logique
+        propre à une action en particulier.
+        <br>
+        Le widget se compose de trois éléments : un libellé affichant le nom de l'action,
+        un bouton permettant de capturer la nouvelle touche et un bouton de réinitialisation qui restaure
+        l'assignation par défaut.
+        <br>
+        Le bouton de capture utilise le widget Input Key Selector d'Unreal.
+        Une fois activé, il écoute temporairement la prochaine touche pressée et renvoie automatiquement l'entrée choisie.
+        <br>
+        La nouvelle touche est alors appliquée au mapping correspondant et la valeur affichée
+        est rafraîchie pour refléter la nouvelle assignation.
+    </p>
+</div>
+
+<div class="media-slot">
+    <img
+        src="OathOfTheVolcano/Images/RebindingSystem/RebindButtonOverview.png"
+        alt="OathOfTheVolcano/Images/RebindingSystem/RebindButtonOverview.png"
+        width="100%" height="100%"
+    >
+</div>
+
+<div class="project-text">
+    <p>
+        Cette conception suit une approche data-driven : l'interface est générée à partir des
+        paramètres du joueur plutôt que de mises en page codées en dur. Ajouter de nouvelles actions ne demande
+        aucune modification de l'interface, ce qui rend le système évolutif et facile à maintenir.
+    </p>
+</div>
+
+</div> <!-- <div class="tab-panel" id="tab-2" role="tabpanel" hidden> -->
+
+<script src="HandleTabs.js"></script>
+</section>

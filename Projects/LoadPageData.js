@@ -32,14 +32,14 @@ function RandomInt(min, max)
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function StartUpdateLoadMessage()
+function StartUpdateLoadMessage(pageContent)
 {
     let loadingIndex = 0;
     const loadingStates =
     [
-        "Loading.",
-        "Loading..",
-        "Loading..."
+        `${T("project.loading")}.`,
+        `${T("project.loading")}..`,
+        `${T("project.loading")}...`
     ];
 
     pageContent.textContent = loadingStates[loadingIndex];
@@ -57,6 +57,41 @@ function StartUpdateLoadMessage()
     return intervalHandle;
 }
 
+async function TryFetchText(path)
+{
+    try
+    {
+        const response = await fetch(path);
+        return response.ok ? await response.text() : null;
+    }
+    catch
+    {
+        return null;
+    }
+}
+
+// tries PageContent.<lang>.html first then falls back to the english PageContent.html
+async function FetchPageContent(project)
+{
+    if (CURRENT_LANGUAGE !== DEFAULT_LANGUAGE)
+    {
+        const translatedHtml = await TryFetchText(`${project.ProjectName}/PageContent.${CURRENT_LANGUAGE}.html`);
+        if (translatedHtml != null)
+            return translatedHtml;
+    }
+
+    const path = `${project.ProjectName}/PageContent.html`;
+    const html = await TryFetchText(path);
+
+    if (html == null)
+        throw new Error(`Failed to load ${path}`);
+
+    if (CURRENT_LANGUAGE === DEFAULT_LANGUAGE)
+        return html;
+
+    return `<p class="translation-notice">${T("project.notTranslated")}</p>${html}`;
+}
+
 async function TryLoadSpecificPageContent(project)
 {
     const pageContent = document.getElementById("pageContent");
@@ -65,13 +100,7 @@ async function TryLoadSpecificPageContent(project)
 
     try
     {
-        const path = `${project.ProjectName}/PageContent.html`;
-        const response = await fetch(path);
-
-        if (!response.ok)
-            throw new Error(`Failed to load ${path}`);
-
-        const html = await response.text();
+        const html = await FetchPageContent(project);
 
         clearInterval(updateLoadingMessageIntervalHandle);
 
@@ -86,8 +115,8 @@ async function TryLoadSpecificPageContent(project)
 
         pageContent.innerHTML = 
         `
-        <h2>Failed to load page content :(</h2>
-        <p>This probably means the page is still in the work. Thankfully you can still take a look at the repository</p>
+        <h2>${T("project.loadFailedTitle")}</h2>
+        <p>${T("project.loadFailedText")}</p>
         `;
 
         console.error(error);
@@ -98,8 +127,11 @@ function UpdateNavBar(project)
 {
     document.getElementById("navBar").innerHTML = 
         `
-        <a href="../../index.html" class="back-link">← Back</a>
-        <span class="nav-label">${project.DisplayName}</span>
+        <a href="../index.html" class="back-link">${T("project.back")}</a>
+        <div class="nav-right">
+            <span class="nav-label">${Localize(project.DisplayName)}</span>
+            ${MakeLanguageSwitch()}
+        </div>
         `
     ;
 }
@@ -109,9 +141,9 @@ function UpdateProjectHeader(project)
     document.getElementById("projectHeader").innerHTML = 
         `
         <div class="project-hero-content">
-            <div class="project-meta-tag">PROJECT</div>
-            <h1 class="project-title">${project.DisplayName}</h1>
-            <p class="project-short-desc">${project.Description}</p>
+            <div class="project-meta-tag">${T("project.tag")}</div>
+            <h1 class="project-title">${Localize(project.DisplayName)}</h1>
+            <p class="project-short-desc">${Localize(project.Description)}</p>
         </div>
         `
     ;
@@ -143,7 +175,7 @@ function CreateTechStackListElement(tech)
                 <div class="tech-content">
                     <div>
                         <h3>${TECH_STACK[tech].TechName}</h3>
-                        <p>${TECH_STACK[tech].TechDesc}</p>
+                        <p>${Localize(TECH_STACK[tech].TechDesc)}</p>
                     </div>
                 </div>
             </li>
@@ -158,7 +190,7 @@ function UpdateTechStackList(project)
 
     document.getElementById("techStack").innerHTML = 
         `
-        <h2 class="project-section-title">Tech Used</h2>
+        <h2 class="project-section-title">${T("project.techUsed")}</h2>
         <ul  class="tech-list">
             ${techStackParts.join("")}
         </ul>
@@ -172,10 +204,10 @@ function UpdateRepoLink(project)
 {
     document.getElementById("repoLink").innerHTML = 
         `
-        <h2 class="project-section-title">Repository</h2>
+        <h2 class="project-section-title">${T("project.repository")}</h2>
         <a href="${project.Repo}" class="repo-link" target="_blank">
             <span class="repo-icon">⌥</span>
-            <span>${project.DisplayName}</span>
+            <span>${Localize(project.DisplayName)}</span>
             <span class="repo-arrow">→</span>
         </a>
         `
@@ -188,13 +220,14 @@ function LoadProjectData()
     if (PROJECTS.length <= projectIndex)
     {
         // if project is missing replaces all page s content with big title saying it s missing
-        document.body.innerHTML = `<h1>Project ${projectIndex} not found</h1>`;
+        document.body.innerHTML = `<h1>${T("project.notFound")} (${projectIndex})</h1>`;
         return;
     }
 
     const project = PROJECTS[projectIndex];
-    
-    document.title = project.DisplayName; // update tab title
+
+    ApplyStaticTranslations();
+    document.title = Localize(project.DisplayName); // update tab title
     
     UpdateNavBar(project);
     UpdateProjectHeader(project);
