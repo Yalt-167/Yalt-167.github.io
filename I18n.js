@@ -18,9 +18,9 @@ const STRINGS =
         "hero.wip": "This page is a work in progress and most projects aren't there yet. They're still accessible on my github page tho :)",
         "projects.title": "Featured Projects",
         "contact.title": "Contact",
+        "contact.email": "Email",
         "contact.copyEmail": "Copy Email",
-        "contact.copied": "Email copied :)",
-        "contact.copyFailed": "Failed to copy email",
+        "contact.copied": "Email copied!",
 
         "filters.engine": "Engine",
         "filters.language": "Language",
@@ -55,9 +55,9 @@ const STRINGS =
         "hero.wip": "Cette page est en cours de construction et la plupart des projets n'y sont pas encore. Ils restent accessibles sur mon GitHub :)",
         "projects.title": "Projets",
         "contact.title": "Contact",
+        "contact.email": "Email",
         "contact.copyEmail": "Copier l'email",
-        "contact.copied": "Email copié :)",
-        "contact.copyFailed": "Impossible de copier l'email",
+        "contact.copied": "Email copié !",
 
         "filters.engine": "Moteur",
         "filters.language": "Langage",

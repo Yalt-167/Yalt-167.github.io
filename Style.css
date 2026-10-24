@@ -361,7 +361,8 @@ section {
   gap: 16px;
 }
 
-.contact-links a {
+.contact-links a,
+.contact-links button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -379,7 +380,8 @@ section {
   transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.contact-links a::before {
+.contact-links a::before,
+.contact-links button::before {
   content: '';
   position: absolute;
   left: 0; top: 0; bottom: 0;
@@ -390,14 +392,28 @@ section {
   transform-origin: bottom;
 }
 
-.contact-links a:hover {
+.contact-links a:hover,
+.contact-links button:hover {
   color: var(--accent);
   border-color: rgba(0,245,160,0.3);
   box-shadow: 0 0 20px rgba(0,245,160,0.08);
 }
 
-.contact-links a:hover::before {
+.contact-links a:hover::before,
+.contact-links button:hover::before {
   transform: scaleY(1);
+}
+
+/* <button> doesn't inherit fonts by default */
+.contact-links button {
+  font-family: var(--mono);
+  cursor: pointer;
+}
+
+/* Clipboard unavailable: the button shows the address, one click selects it */
+.contact-links button.show-email {
+  user-select: all;
+  cursor: text;
 }
 
 /* ── Animations ── */
@@ -413,7 +429,8 @@ section {
   .hero::after { display: none; }
   .projects-grid { grid-template-columns: 1fr; }
   .contact-links { flex-direction: column; }
-  .contact-links a { width: 100%; justify-content: center; }
+  .contact-links a,
+  .contact-links button { width: 100%; justify-content: center; }
 }
 
 
