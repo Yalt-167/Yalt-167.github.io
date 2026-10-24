@@ -2,86 +2,103 @@ const TECH_STACK =
 [
     {
         TechName: "Unity",
+        Category: "Engine",
         TechDesc: "Cross-platform game engine used for 2D and 3D game development with a rich editor and asset pipeline."
     },
 
     {
         TechName: "Unity Netcode",
+        Category: "Library",
         TechDesc: "Unity's first-party networking library for multiplayer games using client-server and host architectures."
     },
 
     {
         TechName: "Unreal Engine",
+        Category: "Engine",
         TechDesc: "High-fidelity game engine by Epic Games with Blueprints, C++ gameplay systems, and AAA rendering pipeline."
     },
     
     {
         TechName: "C#",
+        Category: "Language",
         TechDesc: "Strongly-typed language used for Unity scripting and .NET development."
     },
     
     {
         TechName: "C++",
+        Category: "Language",
         TechDesc: "High-performance systems language used in game engines, Unreal Engine, and engine development."
     },
     
     {
         TechName: "C",
+        Category: "Language",
         TechDesc: "Low-level procedural language used for systems programming and engine foundations."
     },
 
     {
         TechName: "SDL",
+        Category: "Library",
         TechDesc: "Cross-platform multimedia library providing low-level access to input, audio, and graphics."
     },
     
     {
         TechName: "SFML",
+        Category: "Library",
         TechDesc: "C++ multimedia library for 2D graphics, audio, and window management."
     },
     
     {
         TechName: "Winsock2",
+        Category: "Library",
         TechDesc: "Windows networking API for TCP/UDP socket programming."
     },
     
     {
         TechName: "Python",
+        Category: "Language",
         TechDesc: "High-level language used for scripting, tooling, automation, and prototyping."
     },
     
     {
         TechName: "Pygame",
+        Category: "Library",
         TechDesc: "Python game library built on SDL for 2D game development."
     },
     
     {
         TechName: "Assimp",
+        Category: "Library",
         TechDesc: "Asset import library for loading 3D models (FBX, OBJ, GLTF, etc.)."
     },
     
     {
         TechName: "miniaudio",
+        Category: "Library",
         TechDesc: "Single-header audio library for playback and processing with no dependencies."
     },
     
     {
         TechName: "DirectX 11",
+        Category: "Library",
         TechDesc: "Low-level graphics API for real-time rendering and GPU programming on Windows."
     },
 
     {
         TechName: "ImGUI",
+        Category: "Library",
         TechDesc: "Immediate Mode Graphical user interface library for fast and lightweight debugging tools and editor interfaces."
     },
 
     {
         TechName: " GitHub",
+        Category: "Tool",
         TechDesc: "Distributed version control and collaboration platform for code hosting, pull requests, and issue tracking. Includes GitHub Actions for CI/CD pipelines, enabling automated builds, testing, and deployment workflows integrated directly into repositories."
     },
 
     {
         TechName: " GitHubActions",
+        Category: "Tool",
         TechDesc: "CI/CD automation system integrated into GitHub repositories, used to define workflows for building, testing, and deploying applications. Supports event-driven pipelines triggered by pushes, pull requests, schedules, and manual dispatch, with reusable actions and self-hosted or hosted runners.",
     },
 ];
@@ -155,13 +172,13 @@ const PROJECTS =
     //     Repo: "https://github.com/Yalt-167/Doxar",
     // },
     
-    // { // RType
-    //     ProjectName: "RType",
-    //     DisplayName: "R-Type game",
-    //     Description: "Up to 2 player (local) R-Type like written in C and SDL",
-    //     TechStack: [C, SDL],
-    //     Repo: "https://github.com/MagnierHugo/C-RType",
-    // },
+    { // RType
+        ProjectName: "RType",
+        DisplayName: "R-Type game",
+        Description: "Up to 2 player (local) R-Type like written in C and SDL",
+        TechStack: [C, SDL],
+        Repo: "https://github.com/MagnierHugo/C-RType",
+    },
 
     // { // MicWizard
     //     ProjectName: "MicWizard",
@@ -188,7 +205,7 @@ const PROJECTS =
         ProjectName: "SpaceWar_TDD_CI-CD",
         DisplayName: "TDD and CI-CD project",
         Description: "Small project aiming at setting up an TDD and CI-CD architecture and understand their purpose",
-        TechStack: [UNITY, GITHUB, GITHUB_ACTIONS],
+        TechStack: [UNITY, CSHARP, GITHUB, GITHUB_ACTIONS],
         Repo: "https://github.com/Yalt-167/SpaceWar_TDD_CI-CD",
     },
 ];

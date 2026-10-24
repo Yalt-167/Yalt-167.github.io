@@ -1,151 +1,316 @@
 <section class="project-section">
+    <h2 class="project-section-title">Description</h2>
 
-<h2 class="project-section-title">Content</h2>
+    <div class="project-text">
+        <p>
+            This school project is a recreation of the classic R-Type shoot 'em up, written in C
+            using SDL for rendering, input handling and audio.
+            Up to two players can play locally, on keyboard or controller, through a series of levels made of enemy waves and a final boss.
+        </p>
 
-<div class="project-text">
-    <p>
-        How it works:<br><br>
-        This school project is a recreation of the classic R-Type game written in C
-        using SFML for rendering, input handling, audio, and networking.
+        <p>
+            As a first C project, the objective was to learn low-level game programming concepts
+            (manual memory management, game loop, collision, animation) while respecting overly strict coding constraints
+            such as a maximum of 5 functions per file, 30 lines per function and 80 characters per line.
+        </p>
+    </div>
 
-        As a first C project, the objective was to learn low-level
-        game programming concepts while respecting overly strict coding constraints
-        such as a maximum of 5 functions per file, 30 lines per function,
-        and 80 characters per line.<br><br>
-    </p>
-</div>
+    <div class="media-slot">
+        <img
+            src="https://github.com/user-attachments/assets/c14037f4-8164-4f0b-82f1-7d75becbfb9d"
+            alt="R-Type gameplay screenshot"
+            width="100%"
+        >
+    </div>
+</section>
 
-<div class="media-slot media">
-    <img
-        src="MultiplayerTicTacToe/Images/Architecture.png"
-        alt="MultiplayerTicTacToe/Images/Architecture.png"
-        height="100%"
-    >
-</div>
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
 
-<div class="project-text">
-    <p>
-        Let s start at the entry point of the program: int main(int argc, char* argv[]).
-        We first initialize SDL and put all the SDL related data into a struct.
-        We then initialize the GameArgs struct which holds every core elements of the game (SDL data, levels and game state).
-    </p>
-</div>
+    <div class="project-text">
+        <p><b>Entry point and game loop</b></p>
+        <p>
+            Let's start at the entry point of the program: int main(int argc, char* argv[]).
+            We first initialize SDL and put all the SDL related data (window, renderer, textures, sounds) into a struct.
+            We then initialize the GameArgs struct which holds every core element of the game (SDL data, game state, levels and boss).
+        </p>
+        <p>
+            Bundling everything into GameArgs was a deliberate choice to cope with the coding constraints.
+            Most systems need access to several of these elements at once (the renderer, the game state, the current level...),
+            and passing each of them separately would quickly blow past the 80 characters per line limit and eat into the 30 lines per function budget
+            with multi-line signatures and calls. With a single struct passed around, function signatures stay short and adding a new piece of shared data
+            doesn't require touching every function along the call chain.
+        </p>
+        <p>
+            GameArgs is passed around by pointer rather than by value. The struct is fairly large (all the SDL handles and textures,
+            the whole game state, the levels and the boss), so passing it by value would copy all of it on every call, several times per frame.
+            It also means that every function works on the same instance, so changes made deep in the call chain are never silently lost on a copy.
+            The same rule applies to every other sizeable struct (SDL, GameState, Scene, Player, Enemy...) while small ones like Wave or Bonus are still passed by value.
+        </p>
+        <p>
+            The trade-off of this approach is that functions get access to more than they strictly need, which hides their real dependencies.
+        </p>
+        <p>
+            After the start menu returns the player count, the game runs each level with a classic fixed loop:
+            tick the clock, gather inputs, update, draw, then check whether the level is won or lost.
+        </p>
+    </div>
 
 <div><pre><code class="language-c">
-SDL sdlStruct = StartSDL();
-Scene* Levels = CreateLevels(LEVEL_COUNT, sdlStruct);
-GameArgs gameArgs = { sdlStruct, InitGameState(sdlStruct),
-    Levels, CreateBoss(sdlStruct.Tex.Boss) };
-</code></pre></div>
-
-<div class="project-text">
-    <p>
-        We can now move onto the start menu which let the user choose the player count and the keybinds
-    </p>
-</div>
-<div><pre><code class="language-c">
-static void DrawStartMenu(SDL sdl, Button buttons[4], char* texts[4])
+int main(int argc, char* argv[])
 {
-    SDL_RenderCopy(sdl.renderer, sdl.Tex.TitleScreen, NULL, NULL);
+    SDL sdlStruct = StartSDL();
+    Scene* Levels = CreateLevels(LEVEL_COUNT, sdlStruct);
+    GameArgs gameArgs = { sdlStruct, InitGameState(sdlStruct),
+        Levels, CreateBoss(sdlStruct.Tex.Boss) };
+    int playerCount = StartMenu(&gameArgs);
+    Tick(&gameArgs.State);
+    PlaySound(SONG, gameArgs.SDL);
 
-    for (int i = 0; i < 4; i++) {
-        DrawButton(sdl.renderer, buttons[i]);   
-        RenderText(sdl, texts[i], DONT_RENDER_FLAG,
-            buttons[i].Rect.x + buttons[i].Rect.w / 2,
-            buttons[i].Rect.y + buttons[i].Rect.h / 2);
+    for (int i = 0; i < LEVEL_COUNT; i++) {
+        gameArgs.State.CurLVL = i + 1;
+        if (playerCount == 1) gameArgs.Levels[i].Players[1].Active = false;
+        gameArgs.Levels[i].Time = gameArgs.State.CurrentTime;
+        int endGame;
+        while (gameArgs.State.Continue) {
+            Tick(&gameArgs.State);
+
+            HandleInputs(&gameArgs);
+            Update(&gameArgs, &gameArgs.Levels[i]);
+            Draw(&gameArgs, gameArgs.Levels[i]);
+            SDL_Delay(FRAMERATE);
+
+            endGame = CheckEndGame(&gameArgs, gameArgs.Levels[i]);
+            if (endGame > 0) { break; }
+            else if (endGame < 0) { gameArgs.State.Continue = false; }
+        }
     }
 
-    SDL_RenderPresent(sdl.renderer);
+    return EndScreen(&gameArgs);
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p>
+            Every movement is multiplied by a delta time computed in Tick() so the game speed doesn't depend on the framerate.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+static void Tick(GameState* state)
+{
+    state->DeltaTime = (SDL_GetTicks() - state->CurrentTime) / 1000;
+    state->CurrentTime = SDL_GetTicks();
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Inputs: keyboard and controllers</b></p>
+        <p>
+            Inputs are reset every frame and then gathered into a per-player PlayerInput struct (direction + shooting).
+            Keyboard keys go through a per-player InputMap so they can be rebound in the remap menu (opened with Escape).
+            Controller sticks are only read if the keyboard didn't already provide a direction, which lets both devices coexist
+            without fighting each other. Joysticks are re-detected whenever the connected count changes, so controllers can be plugged in mid-game.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+void HandleJoystick(InputsSummary* inputs)
+{
+    SDL_GameController* controller = SDL_GameControllerOpen(0);
+
+    for (int i = 0; i < PLAYER_CNT; i++) {
+        PlayerInput* playerInput = &inputs->PlayerInput[i];
+        if (playerInput->DirX == 0) {
+            playerInput->DirX = ControllerAxisToInt(controller,
+                i ? SDL_CONTROLLER_AXIS_RIGHTX : SDL_CONTROLLER_AXIS_LEFTX);
+        }
+
+        if (playerInput->DirY == 0) {
+            playerInput->DirY = ControllerAxisToInt(controller,
+                i ? SDL_CONTROLLER_AXIS_RIGHTY : SDL_CONTROLLER_AXIS_LEFTY);
+        }
+    }
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Waves and enemy queue</b></p>
+        <p>
+            Each level owns a queue of enemies generated upfront. Enemies get a random height and a 1 in 4 chance to drop a bonus,
+            and the further into the queue they are, the more HP they get, so difficulty ramps up as the level goes on.
+        </p>
+        <p>
+            The enemies are then split into waves of random size. Each wave stores how many enemies it releases and how long to wait
+            before the next one (bigger waves give the players more breathing room afterwards).
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+Wave* CreateWaves(int nbrEnemies, int maxEnemiesPerWave, int baseWait, SDL* sdl)
+{
+    ...
+    while (nbrEnemies > 0) {
+        if (nbrEnemies > maxEnemiesPerWave) {
+            enemiesInWave = RdmInt(1, maxEnemiesPerWave, true);
+        }
+        else { enemiesInWave = RdmInt(1, nbrEnemies, true); }
+        ...
+    }
+
+    Wave* waves = malloc(waveNumber * sizeof(Wave));
+    for (int waveIndex = 0; waveIndex < waveNumber; waveIndex++) {
+        waves[waveIndex] = (Wave){
+            enemies[waveIndex],
+            baseWait + baseWait / 3 * enemies[waveIndex],
+            waveIndex == waveNumber - 1 ? true : false
+        };
+    }
+    ...
 }
 
-static bool HandleStartMenu(GameArgs gameArgs, Button buttons[4], int* pCount)
+void SpawnEnemies(Scene* scene)
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
+    if ((scene->Time + scene->WaitTime) <= SDL_GetTicks() && !scene->waveEnd) {
+        Wave wave = PopWave(scene);
+        scene->ActiveEnemies += wave.nbrEnemies;
+        scene->WaitTime = wave.Wait;
+        scene->Time = SDL_GetTicks();
+        scene->waveEnd = wave.isEnd;
+    }
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p>
+            A level is won once its last wave has been spawned and every active enemy is dead (and, on the last level, once the boss is down).
+            It is lost when both players are dead.
+        </p>
+    </div>
+
+    <div class="media-slot">
+        <img
+            src="https://github.com/user-attachments/assets/3d90e261-bc5f-478b-8c02-8ae4a9017932"
+            alt="R-Type boss fight screenshot"
+            width="100%"
+        >
+    </div>
+
+    <div class="project-text">
+        <p><b>Projectiles: a fixed pool</b></p>
+        <p>
+            Rather than allocating a projectile every time someone shoots, every scene owns a fixed array of MAX_PROJECTILES.
+            Shooting simply grabs the first inactive slot and resets it. Projectiles that leave the screen are flagged inactive and become reusable.
+            If the pool is ever exhausted, the first projectile is recycled so the game stays in a healthy state instead of crashing.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+static Projectile* SeekAvailableProjectile(Projectile* projs) {
+    for (int i = 0; i < MAX_PROJECTILES; i++)
     {
-        if (event.type == SDL_QUIT) return false;
-        else if (event.type == SDL_MOUSEBUTTONDOWN)
+        if (!projs[i].Active) return &projs[i];
+    }
+    return &projs[0];
+    // in case none is available keep the game in a somewhat healthy state by kidnapping an active projectile
+}
+
+void ShootPlayerProjectile(Player* player, Projectile* projs,
+    GameState* state, GameArgs* args)
+{
+    PlaySound(BLASTER, args->SDL);
+    Projectile* projectile = SeekAvailableProjectile(projs);
+    projectile->X = player->X + player->Width;
+    projectile->Y = player->Y + player->Height / 2;
+    projectile->DirY = 0;
+    projectile->DirX = 1;
+    projectile->Active = true;
+    projectile->ShotByPlayer = true;
+
+    state->ShotFired++;
+}
+</code></pre></div>
+
+    <div class="project-text">
+        <p><b>Collisions</b></p>
+        <p>
+            Every entity can be converted to an SDL_Rect and collisions are AABB checks through SDL_HasIntersection.
+            The ShotByPlayer flag on projectiles decides who they can hit, so players and enemies share the same pool.
+            When an enemy dies, an explosion animation and a sound are played, a bonus may spawn (extra health or speed)
+            and the enemy's points are added to the score.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+// returns how much point for the kill else 0 as no kill
+int CheckEnemyProjCollision(GameState* state, Enemy* enemy,
+    Scene* scene, SDL* sdl)
+{
+    Projectile* projs = scene->Projectiles;
+
+    SDL_Rect enemyRect = EnemyAsRect(enemy);
+    for (int proj = 0; proj < MAX_PROJECTILES; proj++)
+    {
+        Projectile* curProj = &projs[proj];
+        if (!curProj->Active) { continue; }
+        SDL_Rect projRect = ProjectileAsRect(curProj);
+        if (SDL_HasIntersection(&projRect, &enemyRect) && curProj->ShotByPlayer)
         {
-            int mouseX, mouseY;
-            SDL_GetMouseState(&mouseX, &mouseY);
-            for (int i = 0; i < 4; i++) {
-                if (PointInRect(mouseX, mouseY, buttons[i].Rect)) {
-                    switch (i) {
-                        case 0:
-                            *pCount = 1;
-                            return false;
-                        case 1:
-                            *pCount = 2;
-                            return false;
-                        case 2:
-                            RemapMenu(gameArgs);
-                            break;
-                        case 3:
-                            SDL_Quit();
-                            break;
-                    }
-                }
+            curProj->Active = false;
+            enemy->HP -= 1;
+            if (enemy->HP <= 0) {
+                SDL_Rect rect = { enemy->X, enemy->Y, BOOM_WIDTH, BOOM_HEIGTH };
+                PlaySound(KABOOM, sdl);
+                sdl->nbrAnimation++;
+                sdl->animes = AddAnimation(sdl, sdl->Tex.Boom, BOOM_FRAMES,
+                    BOOM_WAIT_BETWEEN_FRAMES, rect);
+                if (enemy->DropBoost) SpawnBonus(scene->Bonuses, enemy->X, enemy->Y);
+                return enemy->AwardedPoints;
             }
         }
     }
-    return true;
+    return 0;
 }
+</code></pre></div>
 
-int StartMenu(GameArgs gameArgs)
+    <div class="project-text">
+        <p><b>Animations</b></p>
+        <p>
+            An animation is a list of textures, a current frame and a time between frames.
+            One-shot animations such as explosions are stored in a dynamic array: they're appended when spawned,
+            advanced every frame, and removed once their last frame has played.
+        </p>
+    </div>
+
+<div><pre><code class="language-c">
+void RunAnimations(SDL* sdl)
 {
-    Button buttons[4];
-    CreateButtons(buttons, gameArgs.SDL);
-    char* texts[4] = { "SOLO", "DUO", "REBIND", "QUIT" };
-
-    int playerCount = 0;
-    bool continue_ = true;
-    while (continue_)
+    for (int index = 0; index < sdl->nbrAnimation; index++)
     {
-        DrawStartMenu(gameArgs.SDL, buttons, texts);
-        continue_ = HandleStartMenu(gameArgs, buttons, &playerCount);
+        Animation* anime = &sdl->animes[index];
+        if (anime->curFrame < anime->nbrFrames) { RunAnimation(sdl, anime); }
+        else {
+            sdl->nbrAnimation--;
+            sdl->animes = DeleteAnimation(sdl, index);
+        }
     }
-    return playerCount;
 }
-
 </code></pre></div>
 
-	int playerCount = StartMenu(gameArgs);
-	Tick(&gameArgs.State);
-	PlaySound(SONG, gameArgs.SDL);
+    <div class="project-text">
+        <p><b>Score persistence</b></p>
+        <p>
+            When the game ends, the end screen shows the score, the high score and the number of shots fired.
+            The high score is saved by writing the raw int to a binary file, and loaded back on startup (defaulting to 0 if no save exists).
+        </p>
+    </div>
 
-	for (int i = 0; i < LEVEL_COUNT; i++) {
-		gameArgs.State.CurLVL = i + 1;
-		if (playerCount == 1) gameArgs.Levels[i].Players[1].Active = false;
-		gameArgs.Levels[i].Time = gameArgs.State.CurrentTime;
-		int endGame;
-		while (gameArgs.State.Continue) {
-			Tick(&gameArgs.State);
-
-			HandleInputs(&gameArgs);
-			Update(&gameArgs, &gameArgs.Levels[i]);
-			Draw(&gameArgs, gameArgs.Levels[i]);
-			SDL_Delay(FRAMERATE);
-
-			endGame = CheckEndGame(gameArgs, gameArgs.Levels[i]);
-			if (endGame > 0) { break; }
-			else if (endGame < 0) { gameArgs.State.Continue = false; }
-		}
-	}
-
-	return EndScreen(gameArgs);
-</code></pre></div>
-
-<div class="project-text">
-    <p>
-        
-    </p>
-</div>
-
-
-<div class="project-text">
-    <p>
-        
-    </p>
-</div>
-
+    <div class="project-text">
+        <p><b>Takeaways</b></p>
+        <p>
+            Looking back, a few things would be done differently: the enemy queue and animation list are reallocated every time an element is removed,
+            where a swap-remove or a fixed pool (like the projectiles) would avoid the allocations entirely.
+            Still, this project was a great introduction to managing memory by hand and to structuring a full game without an engine.
+        </p>
+    </div>
 </section>
