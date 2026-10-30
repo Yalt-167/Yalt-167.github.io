@@ -1,0 +1,253 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p><b>A small 2D game engine to learn C++</b></p>
+
+    <p class="indented-text-content">
+        I built this engine to learn C++. Coming from Unity and C#, I wanted to understand what an engine does under the hood,
+        so I rebuilt the parts I used every day on top of SFML: a main loop, scenes, GameObjects and components,
+        coroutines, events and resource caching.
+    </p>
+
+    <p class="indented-text-content">
+        Its API deliberately mirrors Unity's (Awake, GetComponent, StartCoroutine, WaitForSeconds...) so I could focus on
+        how to implement those features in C++ rather than on designing a new API. Along the way it became my playground
+        for the language: templates, smart pointers, lambdas, RTTI and operator overloading.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
+
+<div class="media-slot">
+    <a href="SFML_Engine/Images/Architecture.svg" target="_blank" title="Open full size">
+        <img
+            src="SFML_Engine/Images/Architecture.svg"
+            alt="Diagram of the engine architecture: the main loop, the modules, scenes containing GameObjects and their components, and the utilities"
+            width="100%" height="100%"
+        >
+    </a>
+</div>
+
+<div class="project-text">
+    <p><b>Main loop and modules</b></p>
+    <p>
+        The Engine owns a list of modules: the window, time, inputs and the scene manager.
+        Each one derives from Module, which exposes virtual Init, Update, Render, PostRender and Shutdown methods,
+        and the main loop simply calls each step on every module, in order, until the window is closed.
+    </p>
+    <p>
+        Adding a system to the engine is just a new Module subclass and one line in CreateModules().
+        The order of that list is the order the modules run in, every frame.
+    </p>
+</div>
+
+<div><pre><code class="language-cpp">
+void Engine::Run()
+{
+    CreateModules();
+
+    Init();
+
+    while (ShouldRun())
+    {
+        Update();
+        Render();
+        PostRender();
+    }
+
+    Shutdown();
+}
+
+void Engine::CreateModules() {
+    CreateModule&lt;Window&gt;();
+    CreateModule&lt;TimeModule&gt;();
+    CreateModule&lt;InputsManager&gt;();
+    CreateModule&lt;SceneManager&gt;();
+}
+
+void Engine::Update()
+{
+    for (Module* module : Instance-&gt;modules)
+    {
+        module-&gt;Update();
+    }
+}
+
+// Engine.hpp
+template&lt;typename ModuleType&gt; inline void CreateModule()
+{
+    modules.push_back(new ModuleType());
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>GameObjects and components</b></p>
+    <p>
+        Scenes own GameObjects, and GameObjects own their components through std::shared_ptr.
+        AddComponent&lt;T&gt;() creates the component, gives it its owner and queues its Awake() on the scene,
+        so it runs at the start of the next update, once the GameObject has been fully set up.
+    </p>
+</div>
+
+<div><pre><code class="language-cpp">
+template&lt;typename TComponent&gt; inline std::shared_ptr&lt;TComponent&gt; GameObject::AddComponent()
+{
+    std::shared_ptr&lt;TComponent&gt; componentPtr = std::make_shared&lt;TComponent&gt;();
+    std::shared_ptr&lt;Component&gt; asComponent = std::static_pointer_cast&lt;Component&gt;(componentPtr);
+
+    asComponent-&gt;SetOwner(this);
+
+    components.push_back(asComponent);
+
+    ParentScene-&gt;QueueAwake([=]() { asComponent-&gt;Awake(); });
+
+    return componentPtr;
+}
+
+template&lt;typename TComponent&gt; inline std::shared_ptr&lt;TComponent&gt; GameObject::GetComponent(int skipOccurences)
+{
+    for (std::shared_ptr&lt;Component&gt; component : components)
+    {
+        std::shared_ptr&lt;TComponent&gt; relevantComponent = std::dynamic_pointer_cast&lt;TComponent&gt;(component);
+
+        if (relevantComponent == nullptr) { continue; }
+
+        if (skipOccurences-- &gt; 0) { continue; }
+
+        return relevantComponent;
+    }
+
+    return nullptr;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p>
+        I tried two ways of storing components, switchable with a #define:
+        <br> - a map from typeid(T).name() to a list of components: a direct lookup, but GetComponent&lt;Renderable&gt;() can't find a Sprite, because the key is the exact type;
+        <br> - a single vector scanned with std::dynamic_pointer_cast: a linear scan and an RTTI cast per component, but lookups by base class work.
+    </p>
+    <p>
+        The engine uses the second one, since Sprite, Circle and Rectangle all derive from Renderable.
+        A GameObject only holds a handful of components, so the scan stays cheap and the flexibility is worth it.
+    </p>
+</div>
+
+<div class="project-text">
+    <p><b>Coroutines</b></p>
+    <p>
+        Unity's coroutines are built on C# iterators (yield return). C++20 coroutines exist, but they need a lot of plumbing
+        (promise types, awaiters...), so I built a simpler system closer to Unity's model:
+        a coroutine is a list of steps, either segments (lambdas that run in one go) or yield instructions
+        that decide whether to continue, wait, or exit. A loop is a yield instruction that jumps back to a saved position.
+    </p>
+</div>
+
+<div><pre><code class="language-cpp">
+// usage: print, wait 2.5 seconds, print again, loop forever
+coroutine.AddSegment(
+    [&amp;]() {
+        std::cout &lt;&lt; "Hi" &lt;&lt; std::endl;
+    }
+);
+coroutinesLoopAnchors.push_back(new Coroutine::ProgressData());
+coroutine.AddControlFlow(
+    new Coroutine::YieldInstructions::WaitForSeconds(2.5f), coroutinesLoopAnchors[0]
+);
+
+coroutine.AddSegment(
+    [&amp;]() {
+        std::cout &lt;&lt; "Hi again" &lt;&lt; std::endl;
+    }
+);
+
+coroutine.AddControlFlow(
+    new Coroutine::YieldInstructions::DoWhileLoop(coroutinesLoopAnchors[0], [] { return true; })
+);
+
+StartCoroutine(coroutine);
+
+// Coroutine::Update(), called every frame: returns whether the coroutine is over
+while (progressData.Step &lt; totalSteps)
+{
+    if (isControlFlow[progressData.Step])
+    {
+        int ctrlFlowIndex = progressData.ControlFlowIndex; // can change within evaluate
+        switch (controlFlow[ctrlFlowIndex]-&gt;Evaluate(&amp;progressData))
+        {
+            case YieldInstructions::Result::Proceed:
+                controlFlow[ctrlFlowIndex]-&gt;Reset();
+                progressData.ControlFlowIndex++;
+                break;
+
+            case YieldInstructions::Result::Wait:
+                return false;
+
+            case YieldInstructions::Result::Exit:
+                progressData.Step = 0;
+                started = false;
+                return true;
+            ...
+        }
+    }
+    else
+    {
+        segments[progressData.SegmentIndex++]();
+    }
+
+    progressData.Step++;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Templates everywhere</b></p>
+    <p>
+        This project is where I got comfortable with templates. The scene manager loads any number of scenes with a fold expression,
+        and the resource manager loads each texture, sound or font once, then hands out the cached copy, keyed by type and path.
+    </p>
+</div>
+
+<div><pre><code class="language-cpp">
+template &lt;typename ...ScenesNames&gt; static void LoadScenes(bool additive = false)
+{
+    if (!additive)
+    {
+        UnloadAllScenes();
+    }
+
+    (LoadScene&lt;ScenesNames&gt;(true), ...);
+}
+
+template &lt;typename ResourceType&gt; std::shared_ptr&lt;ResourceType&gt; ResourceManager::Load(const std::string&amp; path)
+{
+    const std::string&amp; resourceTypeAsStr = NameOfType&lt;ResourceType&gt;();
+
+    if (resources[resourceTypeAsStr].contains(path))
+    {
+        return std::static_pointer_cast&lt;ResourceType&gt;(resources[resourceTypeAsStr][path]);
+    }
+
+    std::shared_ptr&lt;ResourceType&gt; newResource = std::make_shared&lt;ResourceType&gt;();
+    std::static_pointer_cast&lt;ResourceTypes::Resource&gt;(newResource)-&gt;Load(path);
+
+    resources[resourceTypeAsStr][path] = newResource;
+
+    return newResource;
+}
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>What it taught me</b></p>
+    <p>
+        Beyond the syntax, this engine taught me to think about ownership and lifetimes, which C# had always handled for me:
+        who owns an object, when it gets destroyed, and what a lambda capture keeps alive.
+        It also taught me how templates are compiled, why their definitions have to live in headers (the .inl files),
+        and what RTTI and dynamic casts cost.
+    </p>
+    <p>
+        Looking back, I would let std::unique_ptr own the modules and GameObjects instead of raw new and delete,
+        and keep std::shared_ptr for the few objects that are really shared.
+    </p>
+</div>
+
+</section>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Network layer: packets and threads">
+<title>Network layer: packets and threads</title>
+<defs><marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc26a"/></marker><marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef5b5b"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">Network layer: packets and threads</text>
+<rect x="48" y="112" width="736" height="270" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="148" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">ONE MESSAGE = HEADER + BODY</text>
+<rect x="76" y="176" width="170" height="64" rx="0" fill="rgba(0,245,160,0.08)" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="161.0" y="205" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">PacketType</text>
+<text x="161.0" y="228" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="middle">4 B</text>
+<rect x="246" y="176" width="150" height="64" rx="0" fill="rgba(0,245,160,0.08)" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="321.0" y="205" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">Size</text>
+<text x="321.0" y="228" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="middle">4 B</text>
+<rect x="428" y="176" width="328" height="64" rx="0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="592" y="214" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#8f98a8" text-anchor="middle">body · Size bytes</text>
+<path d="M396.0 208.0 L426.0 208.0" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<text x="161" y="270" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#00f5a0" text-anchor="middle">send #1: the 8-byte header</text>
+<text x="592" y="270" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">send #2: the body</text>
+<text x="76" y="350" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">The receiver reads 8 bytes, then exactly Size more.</text>
+<rect x="816" y="112" width="736" height="270" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="844" y="148" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">PACKET TYPES</text>
+<circle cx="850" cy="182" r="4" fill="#3d9df5"/>
+<text x="866" y="188" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#3d9df5" text-anchor="start">Play</text>
+<text x="1074" y="188" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="400" fill="#d3d8e2" text-anchor="start">int slot</text>
+<text x="1290" y="188" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">client → server</text>
+<circle cx="850" cy="224" r="4" fill="#3d9df5"/>
+<text x="866" y="230" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#3d9df5" text-anchor="start">PlayResult</text>
+<text x="1074" y="230" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="400" fill="#d3d8e2" text-anchor="start">int[3]</text>
+<text x="1290" y="230" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">server → client</text>
+<circle cx="850" cy="266" r="4" fill="#a77bf3"/>
+<text x="866" y="272" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#a77bf3" text-anchor="start">ChatMessage</text>
+<text x="1074" y="272" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="400" fill="#d3d8e2" text-anchor="start">char[Size]</text>
+<text x="1290" y="272" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">both ways</text>
+<circle cx="850" cy="308" r="4" fill="#f2a93b"/>
+<text x="866" y="314" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#f2a93b" text-anchor="start">CatchupPacket</text>
+<text x="1074" y="314" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="400" fill="#d3d8e2" text-anchor="start">char[9] grid</text>
+<text x="1290" y="314" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">server → clients</text>
+<circle cx="850" cy="350" r="4" fill="#ef5b5b"/>
+<text x="866" y="356" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#ef5b5b" text-anchor="start">Disconnection</text>
+<text x="1074" y="356" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="400" fill="#d3d8e2" text-anchor="start">int</text>
+<text x="1290" y="356" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">client → server</text>
+<rect x="48" y="404" width="652" height="236" rx="14" fill="#10131a" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="76" y="438" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">SERVER</text>
+<rect x="68" y="454" width="612" height="50" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="86" y="485" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">GameServer::Run()</text>
+<text x="310" y="485" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">main thread: waits for 2 players, sends the grid</text>
+<rect x="68" y="514" width="612" height="50" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="86" y="545" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">ServerSocket::Run()</text>
+<text x="310" y="545" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">connection thread: accept() loop</text>
+<rect x="68" y="574" width="612" height="50" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="86" y="605" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">HandleClient() ×2</text>
+<text x="310" y="605" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">one thread per client: recv, then switch on type</text>
+<rect x="900" y="404" width="652" height="236" rx="14" fill="#10131a" stroke="#3d9df5" stroke-width="1.5"/>
+<text x="928" y="438" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#3d9df5" text-anchor="start" letter-spacing="2">CLIENT (×2)</text>
+<rect x="920" y="454" width="612" height="50" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="938" y="485" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">GameClient::Run()</text>
+<text x="1162" y="485" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">main thread: input, chat, rendering</text>
+<rect x="920" y="514" width="612" height="50" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="938" y="545" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">ClientSocket::Listen()</text>
+<text x="1162" y="545" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">listener thread: recv, then update grid and chat</text>
+<path d="M702.0 510.0 L898.0 510.0" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<path d="M898.0 540.0 L702.0 540.0" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<text x="800" y="498" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e8eaf0" text-anchor="middle">TCP · WinSock2</text>
+<rect x="48" y="664" width="1504" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="700" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">KEY POINTS</text>
+<circle cx="80" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="96" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">TCP: no lost or reordered moves</text>
+<circle cx="832" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="848" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">The header's Size lets chat messages have any length</text>
+<circle cx="80" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="96" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">accept() and recv() block, so each runs on its own thread</text>
+<circle cx="832" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="848" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">The server validates every move before broadcasting it</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">TICTACTOE · NETWORK LAYER</text>
+</svg>

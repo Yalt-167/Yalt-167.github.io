@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Architecture du moteur : modules, scènes, composants">
+<title>Architecture du moteur : modules, scènes, composants</title>
+<defs><marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc26a"/></marker><marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef5b5b"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">Architecture du moteur : modules, scènes, composants</text>
+<rect x="48" y="112" width="330" height="528" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="72" y="146" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="1.5">BOUCLE PRINCIPALE · Engine::Run()</text>
+<rect x="72" y="170" width="250" height="52" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="197" y="202" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">CreateModules()</text>
+<path d="M197.0 222.0 L197.0 238.0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="72" y="240" width="250" height="52" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="197" y="272" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">Init()</text>
+<path d="M197.0 292.0 L197.0 308.0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="72" y="310" width="250" height="52" rx="8" fill="#0c0f15" stroke="#00f5a0" stroke-width="1.4"/>
+<text x="197" y="342" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">Update()</text>
+<path d="M197.0 362.0 L197.0 378.0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="72" y="380" width="250" height="52" rx="8" fill="#0c0f15" stroke="#00f5a0" stroke-width="1.4"/>
+<text x="197" y="412" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">Render()</text>
+<path d="M197.0 432.0 L197.0 448.0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="72" y="450" width="250" height="52" rx="8" fill="#0c0f15" stroke="#00f5a0" stroke-width="1.4"/>
+<text x="197" y="482" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">PostRender()</text>
+<path d="M197.0 502.0 L197.0 518.0" fill="none" stroke="#8f98a8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="72" y="520" width="250" height="52" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<text x="197" y="552" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="middle">Shutdown()</text>
+<path d="M322.0 476.0 L348.0 476.0 L348.0 336.0 L324.0 336.0" fill="none" stroke="#00f5a0" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<text x="213" y="618" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#00f5a0" text-anchor="middle">tant que la fenêtre est ouverte</text>
+<text x="410" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">MODULES</text>
+<rect x="410" y="158" width="170" height="88" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="426" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="start">Window</text>
+<text x="426" y="222" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="start">fenêtre SFML + ImGui</text>
+<rect x="600" y="158" width="170" height="88" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="616" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="start">TimeModule</text>
+<text x="616" y="222" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="start">delta time, Time</text>
+<rect x="790" y="158" width="170" height="88" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="806" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="start">InputsManager</text>
+<text x="806" y="222" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="start">état clavier et souris</text>
+<rect x="980" y="158" width="170" height="88" rx="10" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="996" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="16" font-weight="700" fill="#e8eaf0" text-anchor="start">SceneManager</text>
+<text x="996" y="222" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8f98a8" text-anchor="start">charge les scènes</text>
+<path d="M1065.0 246.0 L1065.0 286.0" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="410" y="288" width="740" height="352" rx="14" fill="#10131a" stroke="#4cc26a" stroke-width="1.5"/>
+<text x="436" y="322" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="18" font-weight="700" fill="#4cc26a" text-anchor="start">Scene ×N</text>
+<text x="560" y="322" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">Init · Awake · Update · Render · OnGUI</text>
+<rect x="436" y="342" width="688" height="238" rx="12" fill="#10131a" stroke="#3d9df5" stroke-width="1.5"/>
+<text x="460" y="374" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="17" font-weight="700" fill="#3d9df5" text-anchor="start">GameObject ×N</text>
+<text x="618" y="374" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">Enabled · Transform · composants (shared_ptr)</text>
+<rect x="460" y="398" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="534" y="434" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">Transform</text>
+<rect x="622" y="398" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="696" y="434" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">Sprite</text>
+<rect x="784" y="398" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="858" y="434" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">Circle</text>
+<rect x="946" y="398" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="1020" y="434" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">Rectangle</text>
+<rect x="460" y="478" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="534" y="514" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">AudioSource</text>
+<rect x="622" y="478" width="148" height="60" rx="8" fill="rgba(167,123,243,0.10)" stroke="#a77bf3" stroke-width="1.2"/>
+<text x="696" y="514" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="middle">MusicSource</text>
+<rect x="784" y="478" width="148" height="60" rx="8" fill="none" stroke="#8f98a8" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="858" y="514" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="middle">vos composants</text>
+<text x="436" y="612" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">AddComponent() met Awake() en file sur la scène : il s'exécute au début de l'update suivant</text>
+<text x="1190" y="142" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#e8eaf0" text-anchor="start" letter-spacing="2">UTILITAIRES</text>
+<rect x="1190" y="158" width="362" height="104" rx="10" fill="#10131a" stroke="#a77bf3" stroke-width="1.4"/>
+<text x="1212" y="192" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#a77bf3" text-anchor="start">Coroutine</text>
+<text x="1212" y="220" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">segments (lambdas) + instructions</text>
+<text x="1212" y="242" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">de yield (WaitForSeconds...)</text>
+<rect x="1190" y="280" width="362" height="104" rx="10" fill="#10131a" stroke="#f2a93b" stroke-width="1.4"/>
+<text x="1212" y="314" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#f2a93b" text-anchor="start">MulticastDelegate&lt;Args...&gt;</text>
+<text x="1212" y="342" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">+= des callbacks, puis tous appelés</text>
+<rect x="1190" y="402" width="362" height="104" rx="10" fill="#10131a" stroke="#3d9df5" stroke-width="1.4"/>
+<text x="1212" y="436" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#3d9df5" text-anchor="start">ResourceManager::Load&lt;T&gt;()</text>
+<text x="1212" y="464" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">chargée une fois, puis mise</text>
+<text x="1212" y="486" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">en cache par type et chemin</text>
+<rect x="1190" y="524" width="362" height="104" rx="10" fill="#10131a" stroke="#4cc26a" stroke-width="1.4"/>
+<text x="1212" y="558" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#4cc26a" text-anchor="start">Property&lt;T&gt;</text>
+<text x="1212" y="586" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">propriétés façon C# grâce à la</text>
+<text x="1212" y="608" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8f98a8" text-anchor="start">surcharge d'opérateurs</text>
+<rect x="48" y="664" width="1504" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="700" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">POINTS CLÉS</text>
+<circle cx="80" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="96" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Chaque module a Init, Update, Render, PostRender et Shutdown, dans l'ordre</text>
+<circle cx="832" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="848" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Les scènes possèdent les GameObjects, qui possèdent leurs composants</text>
+<circle cx="80" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="96" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">L'API reprend celle de Unity : GetComponent, Awake, StartCoroutine</text>
+<circle cx="832" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="848" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Des templates partout : composants, ressources, délégués, scènes</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">MOTEUR SFML · ARCHITECTURE</text>
+</svg>

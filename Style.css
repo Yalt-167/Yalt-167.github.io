@@ -879,6 +879,60 @@ code
   border-radius: var(--radius);
 }
 
+/* ── Code blocks: Visual Studio default dark theme (see Projects/CodeHighlighter.js) ── */
+pre code.vs-code {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: #1e1e1e;
+  color: var(--vs-text);
+  font-family: 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.vs-csharp,
+.vs-python {
+  --vs-text: #dcdcdc;
+  --vs-punct: #dcdcdc;
+  --vs-string: #d69d85;
+  --vs-param: #9cdcfe;
+  --vs-local: #9cdcfe;
+  --vs-field: #dcdcdc;
+  --vs-struct: #86c691;
+  --vs-enum-member: #dcdcdc;
+}
+
+.vs-cpp,
+.vs-c {
+  --vs-text: #c8c8c8;
+  --vs-punct: #b4b4b4;
+  --vs-string: #e8c9bb;
+  --vs-param: #9a9a9a;
+  --vs-local: #9cdcfe;
+  --vs-field: #dadada;
+  --vs-struct: #4ec9b0;
+  --vs-enum-member: #b8d7a3;
+}
+
+.vs-code .tk-keyword     { color: #569cd6; }
+.vs-code .tk-control     { color: #d8a0df; }
+.vs-code .tk-class       { color: #4ec9b0; }
+.vs-code .tk-struct      { color: var(--vs-struct); }
+.vs-code .tk-interface   { color: #b8d7a3; }
+.vs-code .tk-enum        { color: #b8d7a3; }
+.vs-code .tk-enum-member { color: var(--vs-enum-member); }
+.vs-code .tk-function    { color: #dcdcaa; }
+.vs-code .tk-param       { color: var(--vs-param); }
+.vs-code .tk-local       { color: var(--vs-local); }
+.vs-code .tk-field       { color: var(--vs-field); }
+.vs-code .tk-string      { color: var(--vs-string); }
+.vs-code .tk-number      { color: #b5cea8; }
+.vs-code .tk-comment     { color: #57a64a; }
+.vs-code .tk-preproc     { color: #9b9b9b; }
+.vs-code .tk-macro       { color: #beb7ff; }
+.vs-code .tk-punct       { color: var(--vs-punct); }
+
 
 /* ══════════════════════════════
    EDITOR TABS

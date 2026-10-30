@@ -301,6 +301,30 @@ const PROJECTS =
         TechStack: [UNITY, CSHARP, GITHUB, GITHUB_ACTIONS],
         Repo: "https://github.com/Yalt-167/SpaceWar_TDD_CI-CD",
     },
+
+    { // SFML engine
+        ProjectName: "SFML_Engine",
+        DisplayName: { en: "SFML Engine", fr: "Moteur SFML" },
+        Description:
+        {
+            en: "Small game engine built on SFML to learn C++: modules, scenes, components and coroutines",
+            fr: "Petit moteur de jeu basé sur SFML pour apprendre le C++ : modules, scènes, composants et coroutines",
+        },
+        TechStack: [CPP, SFML, IMGUI],
+        Repo: "https://github.com/Yalt-167/SFML_Engine",
+    },
+
+    { // hangman
+        ProjectName: "HangmanGamePython",
+        DisplayName: { en: "Hangman", fr: "Jeu du pendu" },
+        Description:
+        {
+            en: "Hangman game drawn on a chalkboard, made with Pygame to learn Python",
+            fr: "Jeu du pendu dessiné sur un tableau noir, réalisé avec Pygame pour apprendre le Python",
+        },
+        TechStack: [PYTHON, PYGAME],
+        Repo: "https://github.com/Yalt-167/HangmanGamePython",
+    },
 ];
 
 console.log("Data loaded");

@@ -1,0 +1,144 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p><b>A hangman game to learn Python</b></p>
+
+    <p class="indented-text-content">
+        I made this game to learn Python.
+        It's a hangman game drawn on a chalkboard, built with Pygame.
+    </p>
+
+    <p class="indented-text-content">
+        The player picks a word length between 3 and 9 letters, then guesses the word one letter at a time,
+        with up to 11 wrong guesses while the drawing builds up on the board.
+        Words come from a list of about 2,600 English words, and after a game, pressing "?" opens the word's translation on DeepL.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Content</h2>
+
+<div class="media-slot">
+    <a href="HangmanGamePython/Images/Screens.jpg" target="_blank" title="Open full size">
+        <img
+            src="HangmanGamePython/Images/Screens.jpg"
+            alt="The chalkboard after 3 and 7 wrong guesses, the win screen and the loss screen"
+            width="100%" height="100%"
+        >
+    </a>
+</div>
+
+<div class="project-text">
+    <p><b>The word list</b></p>
+    <p>
+        A one-off script filters the original word list down to the words the game supports (3 to 9 letters),
+        then the game groups the words by length in a dictionary and picks one at random for the length the player chose.
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+from random import choice
+
+def Pick(length : int) -&gt; str:
+    return choice(Read()[length])
+
+def Read() -&gt; dict[int,list[str]]:
+    with open("Words/Words.txt","r") as words:
+        wordsDict : dict[int,list[str]] = dict()
+        for word in words:
+            word = word.strip().lower()
+            if len(word) in wordsDict:
+                wordsDict[len(word)].append(word)
+            else:
+                wordsDict[len(word)] = [word]
+    return wordsDict
+
+def RemoveInvalidWords() -&gt; None:
+    with open("Words/InitialWords.txt","r") as words:
+        with open("Words/Words.txt","w+") as txt:
+            for word in words:
+                word = word.strip().lower()
+                if 2 &lt; len(word) &lt; 10:
+                    txt.write(word + "\n")
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Guesses</b></p>
+    <p>
+        PlaceGuess() validates a guess and fills in every matching letter, using a generator to find them.
+        Invalid guesses and letters already tried are reported by raising an exception, which the game loop catches
+        to display the matching message for 120 frames (2 seconds at 60 FPS).
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+def PlaceGuess(self, guess: str) -&gt; bool:
+
+    if len(guess) != 1: # should not occur
+        raise AttributeError # would trigger InvalidGuess (outside the func)
+
+    if guess in self.usedletters:
+        raise NameError # would trigger AlreadyUsedLetter (outside the func)
+
+    self.usedletters.append(guess)
+    if guess in self.word:
+        for idx in self.GetOccurencesOf(guess): # fill in the blank(s) associated with the current guess
+            self.currentWord[idx] = guess
+        return True
+
+    self.wrongGuesses += 1
+    return False
+
+def GetOccurencesOf(self, char: str) -&gt; Generator[int, None, None]:
+    for idx in range(len(self.word)):
+        if char == self.word[idx]:
+            yield idx
+
+# in the game loop
+try:
+    if guess not in self.alphabet:
+        raise AttributeError # not a letter
+    self.PlaceGuess(guess)
+
+except NameError:
+    self.timerToRenderWrongLetterErrorMessageAndLetter = [120, guess] # 2s cah 60FPS
+
+except AttributeError:
+    self.timerToRenderInvalidGuessMessage = 120 # 2s still
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Fullscreen at any resolution</b></p>
+    <p>
+        Everything is drawn on a fixed 1280x720 surface, which is scaled to the screen's actual size at the end of each frame.
+        The game logic never has to care about the monitor's resolution: only the mouse position needs converting back into the fixed coordinates.
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+def AdjustPos(self,mouse_XY : tuple[int,int]):
+    # if im at (200,200) on my screen it may be (380,500) in computation coordinates due to resizing
+    x, y = mouse_XY
+    x /= (self.sizedDimension[0] / self.W)
+    y /= (self.sizedDimension[1] / self.H)
+    return x,y
+
+def Draw(self): # render
+    self.window = pg.transform.scale(self.window, (self.sizedDimension)) # resize fixed size display to actual dimensions
+    self.display.blit(self.window, (0, 0)) # blit it on the actual screen
+    pg.display.update() # render
+    self.NewDisplay() # new fixed size display
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>What it taught me</b></p>
+    <p>
+        Through this project I learned Python's style: dynamic typing with type hints, list and dictionary comprehensions,
+        generators, f-strings, exceptions, and the if __name__ == "__main__" entry point.
+    </p>
+    <p>
+        Looking back, I would define my own exception classes instead of reusing NameError and AttributeError for game rules,
+        and load the word list once instead of reading the file again for every new word.
+    </p>
+</div>
+
+</section>

@@ -106,7 +106,7 @@ async function TryLoadSpecificPageContent(project)
 
         pageContent.innerHTML = html;
 
-        hljs.highlightAll();
+        HighlightCodeBlocks(pageContent);
         LinkTabSystem();
     }
     catch (error)

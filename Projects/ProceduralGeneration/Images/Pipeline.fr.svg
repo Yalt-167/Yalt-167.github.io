@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Génération du terrain : cinq passes, toutes seedées">
+<title>Génération du terrain : cinq passes, toutes seedées</title>
+<defs><marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00f5a0"/></marker><marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8f98a8"/></marker><marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4cc26a"/></marker><marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ef5b5b"/></marker></defs>
+<rect width="1600" height="900" fill="#0a0c11"/>
+<text x="48" y="70" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="34" font-weight="700" fill="#e8eaf0" text-anchor="start">Génération du terrain : cinq passes, toutes seedées</text>
+<rect x="48" y="132" width="280" height="486" rx="14" fill="#10131a" stroke="#3d9df5" stroke-width="1.5"/>
+<circle cx="86" cy="172" r="16" fill="none" stroke="#3d9df5" stroke-width="1.5"/>
+<text x="86" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3d9df5" text-anchor="middle">1</text>
+<text x="112" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#e8eaf0" text-anchor="start">Carte d'humidité</text>
+<text x="72" y="220" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="700" fill="#3d9df5" text-anchor="start">Bruit de Simplex 2D</text>
+<rect x="72" y="236" width="232" height="170" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<rect x="80" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.51"/>
+<rect x="109" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.76"/>
+<rect x="138" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.83"/>
+<rect x="167" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.70"/>
+<rect x="196" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.53"/>
+<rect x="225" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.49"/>
+<rect x="254" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.60"/>
+<rect x="283" y="250" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.68"/>
+<rect x="80" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.62"/>
+<rect x="109" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.82"/>
+<rect x="138" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.86"/>
+<rect x="167" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.68"/>
+<rect x="196" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.40"/>
+<rect x="225" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.24"/>
+<rect x="254" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.29"/>
+<rect x="283" y="279" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.44"/>
+<rect x="80" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.47"/>
+<rect x="109" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.58"/>
+<rect x="138" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.63"/>
+<rect x="167" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.51"/>
+<rect x="196" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.27"/>
+<rect x="225" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.13"/>
+<rect x="254" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.21"/>
+<rect x="283" y="308" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.46"/>
+<rect x="80" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.19"/>
+<rect x="109" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.30"/>
+<rect x="138" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.47"/>
+<rect x="167" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.52"/>
+<rect x="196" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.43"/>
+<rect x="225" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.33"/>
+<rect x="254" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.39"/>
+<rect x="283" y="337" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.62"/>
+<rect x="80" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.14"/>
+<rect x="109" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.29"/>
+<rect x="138" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.57"/>
+<rect x="167" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.76"/>
+<rect x="196" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.74"/>
+<rect x="225" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.59"/>
+<rect x="254" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.51"/>
+<rect x="283" y="366" width="26" height="26" rx="3" fill="#3d9df5" opacity="0.58"/>
+<text x="72" y="446" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8f98a8" text-anchor="start" letter-spacing="2">RÉSULTAT</text>
+<text x="72" y="472" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">BiomeDelimitationMap</text>
+<line x1="72" y1="496" x2="304" y2="496" stroke="#262c38"/>
+<text x="72" y="528" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">humide ou sec, pour chaque</text>
+<text x="72" y="552" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">(x, z) de la carte</text>
+<path d="M330.0 321.0 L352.0 321.0" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="354" y="132" width="280" height="486" rx="14" fill="#10131a" stroke="#f2a93b" stroke-width="1.5"/>
+<circle cx="392" cy="172" r="16" fill="none" stroke="#f2a93b" stroke-width="1.5"/>
+<text x="392" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#f2a93b" text-anchor="middle">2</text>
+<text x="418" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#e8eaf0" text-anchor="start">Carte de hauteur</text>
+<text x="378" y="220" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="700" fill="#f2a93b" text-anchor="start">2 bruits de Perlin</text>
+<rect x="378" y="236" width="232" height="170" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<path d="M386.0 297.3 L390.0 298.9 L394.0 299.4 L398.0 297.4 L402.0 293.5 L406.0 290.3 L410.0 290.3 L414.0 294.5 L418.0 301.7 L422.0 309.1 L426.0 313.1 L430.0 311.8 L434.0 305.8 L438.0 297.8 L442.0 291.5 L446.0 289.5 L450.0 292.2 L454.0 298.0 L458.0 303.9 L462.0 307.7 L466.0 309.1 L470.0 309.9 L474.0 312.7 L478.0 319.7 L482.0 330.9 L486.0 343.9 L490.0 355.1 L494.0 361.3 L498.0 361.4 L502.0 356.6 L506.0 350.1 L510.0 345.2 L514.0 343.6 L518.0 344.7 L522.0 346.1 L526.0 345.4 L530.0 341.4 L534.0 335.0 L538.0 329.0 L542.0 326.3 L546.0 328.4 L550.0 334.5 L554.0 341.5 L558.0 345.7 L562.0 344.7 L566.0 338.3 L570.0 328.7 L574.0 319.0 L578.0 312.0 L582.0 308.3 L586.0 306.3 L590.0 303.6 L594.0 298.1 L598.0 289.9 L602.0 281.0 L602.0 394.0 L386.0 394.0z" fill="#f2a93b" opacity="0.14"/>
+<path d="M386.0 297.3 L390.0 298.9 L394.0 299.4 L398.0 297.4 L402.0 293.5 L406.0 290.3 L410.0 290.3 L414.0 294.5 L418.0 301.7 L422.0 309.1 L426.0 313.1 L430.0 311.8 L434.0 305.8 L438.0 297.8 L442.0 291.5 L446.0 289.5 L450.0 292.2 L454.0 298.0 L458.0 303.9 L462.0 307.7 L466.0 309.1 L470.0 309.9 L474.0 312.7 L478.0 319.7 L482.0 330.9 L486.0 343.9 L490.0 355.1 L494.0 361.3 L498.0 361.4 L502.0 356.6 L506.0 350.1 L510.0 345.2 L514.0 343.6 L518.0 344.7 L522.0 346.1 L526.0 345.4 L530.0 341.4 L534.0 335.0 L538.0 329.0 L542.0 326.3 L546.0 328.4 L550.0 334.5 L554.0 341.5 L558.0 345.7 L562.0 344.7 L566.0 338.3 L570.0 328.7 L574.0 319.0 L578.0 312.0 L582.0 308.3 L586.0 306.3 L590.0 303.6 L594.0 298.1 L598.0 289.9 L602.0 281.0" fill="none" stroke="#f2a93b" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="378" y="446" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8f98a8" text-anchor="start" letter-spacing="2">RÉSULTAT</text>
+<text x="378" y="472" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">HeightMap</text>
+<line x1="378" y1="496" x2="610" y2="496" stroke="#262c38"/>
+<text x="378" y="528" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">le premier bruit moins</text>
+<text x="378" y="552" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">un second, plus fin</text>
+<path d="M636.0 321.0 L658.0 321.0" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="660" y="132" width="280" height="486" rx="14" fill="#10131a" stroke="#a77bf3" stroke-width="1.5"/>
+<circle cx="698" cy="172" r="16" fill="none" stroke="#a77bf3" stroke-width="1.5"/>
+<text x="698" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#a77bf3" text-anchor="middle">3</text>
+<text x="724" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#e8eaf0" text-anchor="start">Tranches verticales</text>
+<text x="684" y="220" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="700" fill="#a77bf3" text-anchor="start">SpawnTilesVerticalSlice()</text>
+<rect x="684" y="236" width="232" height="170" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<rect x="698" y="276" width="36" height="15" fill="#4cc26a" opacity="0.85"/>
+<rect x="698" y="291" width="36" height="45" fill="#a8743f" opacity="0.85"/>
+<rect x="698" y="336" width="36" height="60" fill="#6b7280" opacity="0.85"/>
+<rect x="698" y="276" width="36" height="120" fill="none" stroke="#0a0c11" stroke-width="1"/>
+<rect x="752" y="261" width="36" height="15" fill="#4cc26a" opacity="0.85"/>
+<rect x="752" y="276" width="36" height="45" fill="#a8743f" opacity="0.85"/>
+<rect x="752" y="321" width="36" height="75" fill="#6b7280" opacity="0.85"/>
+<rect x="752" y="261" width="36" height="135" fill="none" stroke="#0a0c11" stroke-width="1"/>
+<rect x="806" y="321" width="36" height="15" fill="#4cc26a" opacity="0.85"/>
+<rect x="806" y="336" width="36" height="45" fill="#a8743f" opacity="0.85"/>
+<rect x="806" y="381" width="36" height="15" fill="#6b7280" opacity="0.85"/>
+<rect x="806" y="291" width="36" height="30" fill="#3d9df5" opacity="0.55"/>
+<rect x="806" y="291" width="36" height="105" fill="none" stroke="#0a0c11" stroke-width="1"/>
+<rect x="860" y="291" width="36" height="15" fill="#4cc26a" opacity="0.85"/>
+<rect x="860" y="306" width="36" height="45" fill="#a8743f" opacity="0.85"/>
+<rect x="860" y="351" width="36" height="45" fill="#6b7280" opacity="0.85"/>
+<rect x="860" y="291" width="36" height="105" fill="none" stroke="#0a0c11" stroke-width="1"/>
+<text x="684" y="446" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8f98a8" text-anchor="start" letter-spacing="2">RÉSULTAT</text>
+<text x="684" y="472" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">jusqu'à 3 par colonne</text>
+<line x1="684" y1="496" x2="916" y2="496" stroke="#262c38"/>
+<text x="684" y="528" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">herbe, terre, pierre, et</text>
+<text x="684" y="552" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">eau si bas et humide</text>
+<path d="M942.0 321.0 L964.0 321.0" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="966" y="132" width="280" height="486" rx="14" fill="#10131a" stroke="#4cc26a" stroke-width="1.5"/>
+<circle cx="1004" cy="172" r="16" fill="none" stroke="#4cc26a" stroke-width="1.5"/>
+<text x="1004" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#4cc26a" text-anchor="middle">4</text>
+<text x="1030" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#e8eaf0" text-anchor="start">Végétation</text>
+<text x="990" y="220" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="700" fill="#4cc26a" text-anchor="start">Poisson disc sampling</text>
+<rect x="990" y="236" width="232" height="170" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<rect x="1132" y="248" width="78" height="62" rx="14" fill="#3d9df5" opacity="0.35"/>
+<rect x="1070.0" y="278.2" width="3" height="7" fill="#a8743f"/>
+<circle cx="1071.5" cy="274.2" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1111.5" y="307.0" width="3" height="7" fill="#a8743f"/>
+<circle cx="1113.0" cy="303.0" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1017.9" y="326.0" width="3" height="7" fill="#a8743f"/>
+<circle cx="1019.4" cy="322.0" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1020.2" y="270.2" width="3" height="7" fill="#a8743f"/>
+<circle cx="1021.7" cy="266.2" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1089.7" y="368.8" width="3" height="7" fill="#a8743f"/>
+<circle cx="1091.2" cy="364.8" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1129.5" y="385.0" width="3" height="7" fill="#a8743f"/>
+<circle cx="1131.0" cy="381.0" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1113.9" y="266.4" width="3" height="7" fill="#a8743f"/>
+<circle cx="1115.4" cy="262.4" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1068.1" y="336.5" width="3" height="7" fill="#a8743f"/>
+<circle cx="1069.6" cy="332.5" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1162.2" y="351.7" width="3" height="7" fill="#a8743f"/>
+<circle cx="1163.7" cy="347.7" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1171.1" y="384.6" width="3" height="7" fill="#a8743f"/>
+<circle cx="1172.6" cy="380.6" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1018.1" y="360.9" width="3" height="7" fill="#a8743f"/>
+<circle cx="1019.6" cy="356.9" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1193.3" y="350.5" width="3" height="7" fill="#a8743f"/>
+<circle cx="1194.8" cy="346.5" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1107.5" y="340.8" width="3" height="7" fill="#a8743f"/>
+<circle cx="1109.0" cy="336.8" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1057.7" y="307.1" width="3" height="7" fill="#a8743f"/>
+<circle cx="1059.2" cy="303.1" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1171.2" y="322.2" width="3" height="7" fill="#a8743f"/>
+<circle cx="1172.7" cy="318.2" r="7" fill="#4cc26a" opacity="0.9"/>
+<rect x="1049.5" y="385.6" width="3" height="7" fill="#a8743f"/>
+<circle cx="1051.0" cy="381.6" r="7" fill="#4cc26a" opacity="0.9"/>
+<circle cx="1163.7" cy="347.7" r="30" fill="none" stroke="#8f98a8" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="990" y="446" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8f98a8" text-anchor="start" letter-spacing="2">RÉSULTAT</text>
+<text x="990" y="472" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">arbres et buissons</text>
+<line x1="990" y1="496" x2="1222" y2="496" stroke="#262c38"/>
+<text x="990" y="528" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">ni sur l'eau, ni en pente,</text>
+<text x="990" y="552" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">biome selon l'humidité</text>
+<path d="M1248.0 321.0 L1270.0 321.0" fill="none" stroke="#00f5a0" stroke-width="2" stroke-linejoin="round" marker-end="url(#arrow-accent)"/>
+<rect x="1272" y="132" width="280" height="486" rx="14" fill="#10131a" stroke="#00f5a0" stroke-width="1.5"/>
+<circle cx="1310" cy="172" r="16" fill="none" stroke="#00f5a0" stroke-width="1.5"/>
+<text x="1310" y="177" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#00f5a0" text-anchor="middle">5</text>
+<text x="1336" y="179" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#e8eaf0" text-anchor="start">Fusion des meshes</text>
+<text x="1296" y="220" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start">MeshMerger</text>
+<rect x="1296" y="236" width="232" height="170" rx="8" fill="#0c0f15" stroke="#262c38" stroke-width="1.2"/>
+<rect x="1308" y="268" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1327" y="268" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1346" y="268" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1365" y="268" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1384" y="268" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1308" y="287" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1327" y="287" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1346" y="287" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1365" y="287" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1384" y="287" width="16" height="16" rx="2" fill="#4cc26a" opacity="0.85"/>
+<rect x="1308" y="306" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1327" y="306" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1346" y="306" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1365" y="306" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1384" y="306" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1308" y="325" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<rect x="1327" y="325" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1346" y="325" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1365" y="325" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1384" y="325" width="16" height="16" rx="2" fill="#a8743f" opacity="0.85"/>
+<rect x="1308" y="344" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<rect x="1327" y="344" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<rect x="1346" y="344" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<rect x="1365" y="344" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<rect x="1384" y="344" width="16" height="16" rx="2" fill="#6b7280" opacity="0.85"/>
+<path d="M1408.0 316.0 L1438.0 316.0" fill="none" stroke="#8f98a8" stroke-width="1.8" stroke-linejoin="round" marker-end="url(#arrow-muted)"/>
+<rect x="1444" y="266" width="70" height="28" rx="5" fill="#4cc26a" opacity="0.85"/>
+<rect x="1444" y="302" width="70" height="28" rx="5" fill="#a8743f" opacity="0.85"/>
+<rect x="1444" y="338" width="70" height="28" rx="5" fill="#6b7280" opacity="0.85"/>
+<text x="1296" y="446" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" fill="#8f98a8" text-anchor="start" letter-spacing="2">RÉSULTAT</text>
+<text x="1296" y="472" font-family="'Space Mono', Consolas, 'Courier New', monospace" font-size="15" font-weight="700" fill="#e8eaf0" text-anchor="start">1 mesh par matériau</text>
+<line x1="1296" y1="496" x2="1528" y2="496" stroke="#262c38"/>
+<text x="1296" y="528" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">des milliers d'objets</text>
+<text x="1296" y="552" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#8f98a8" text-anchor="start">réduits à une poignée</text>
+<rect x="48" y="664" width="1504" height="184" rx="14" fill="#10131a" stroke="#262c38" stroke-width="1.2"/>
+<text x="76" y="700" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#00f5a0" text-anchor="start" letter-spacing="2">POINTS CLÉS</text>
+<circle cx="80" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="96" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Chaque passe a une seed : mêmes paramètres, même monde</text>
+<circle cx="832" cy="740" r="3.5" fill="#00f5a0"/>
+<text x="848" y="746" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Les objets générés ne sont pas sauvegardés (HideAndDontSave) : ils sont recréés</text>
+<circle cx="80" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="96" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Les tranches puis la fusion limitent le nombre d'objets</text>
+<circle cx="832" cy="788" r="3.5" fill="#00f5a0"/>
+<text x="848" y="794" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="400" fill="#e8eaf0" text-anchor="start">Le Poisson disc sampling garde une distance minimale entre les arbres</text>
+<rect x="560" y="860" width="480" height="30" rx="8" fill="none" stroke="#262c38" stroke-width="1.2"/>
+<text x="800" y="880" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#8f98a8" text-anchor="middle" letter-spacing="3">GÉNÉRATION PROCÉDURALE · PIPELINE</text>
+</svg>

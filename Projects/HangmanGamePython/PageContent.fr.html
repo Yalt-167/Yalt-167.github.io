@@ -1,0 +1,144 @@
+<section class="project-section">
+    <h2 class="project-section-title">Description</h2>
+    <p><b>Un jeu du pendu pour apprendre le Python</b></p>
+
+    <p class="indented-text-content">
+        J'ai réalisé ce jeu pour apprendre le Python.
+        C'est un jeu du pendu dessiné sur un tableau noir, développé avec Pygame.
+    </p>
+
+    <p class="indented-text-content">
+        Le joueur choisit une longueur de mot entre 3 et 9 lettres, puis devine le mot lettre par lettre,
+        avec jusqu'à 11 erreurs pendant que le dessin se complète au tableau.
+        Les mots viennent d'une liste d'environ 2 600 mots anglais, et après une partie, la touche « ? » ouvre la traduction du mot sur DeepL.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2 class="project-section-title">Contenu</h2>
+
+<div class="media-slot">
+    <a href="HangmanGamePython/Images/Screens.jpg" target="_blank" title="Ouvrir en taille réelle">
+        <img
+            src="HangmanGamePython/Images/Screens.jpg"
+            alt="Le tableau après 3 et 7 erreurs, l'écran de victoire et l'écran de défaite"
+            width="100%" height="100%"
+        >
+    </a>
+</div>
+
+<div class="project-text">
+    <p><b>La liste de mots</b></p>
+    <p>
+        Un script ponctuel réduit la liste de mots d'origine à ceux que le jeu gère (de 3 à 9 lettres),
+        puis le jeu regroupe les mots par longueur dans un dictionnaire et en tire un au hasard pour la longueur choisie par le joueur.
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+from random import choice
+
+def Pick(length : int) -&gt; str:
+    return choice(Read()[length])
+
+def Read() -&gt; dict[int,list[str]]:
+    with open("Words/Words.txt","r") as words:
+        wordsDict : dict[int,list[str]] = dict()
+        for word in words:
+            word = word.strip().lower()
+            if len(word) in wordsDict:
+                wordsDict[len(word)].append(word)
+            else:
+                wordsDict[len(word)] = [word]
+    return wordsDict
+
+def RemoveInvalidWords() -&gt; None:
+    with open("Words/InitialWords.txt","r") as words:
+        with open("Words/Words.txt","w+") as txt:
+            for word in words:
+                word = word.strip().lower()
+                if 2 &lt; len(word) &lt; 10:
+                    txt.write(word + "\n")
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Les propositions</b></p>
+    <p>
+        PlaceGuess() valide une proposition et remplit chaque lettre correspondante, en s'appuyant sur un générateur pour les trouver.
+        Les propositions invalides et les lettres déjà essayées sont signalées en levant une exception, que la boucle de jeu intercepte
+        pour afficher le message correspondant pendant 120 frames (2 secondes à 60 FPS).
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+def PlaceGuess(self, guess: str) -&gt; bool:
+
+    if len(guess) != 1: # should not occur
+        raise AttributeError # would trigger InvalidGuess (outside the func)
+
+    if guess in self.usedletters:
+        raise NameError # would trigger AlreadyUsedLetter (outside the func)
+
+    self.usedletters.append(guess)
+    if guess in self.word:
+        for idx in self.GetOccurencesOf(guess): # fill in the blank(s) associated with the current guess
+            self.currentWord[idx] = guess
+        return True
+
+    self.wrongGuesses += 1
+    return False
+
+def GetOccurencesOf(self, char: str) -&gt; Generator[int, None, None]:
+    for idx in range(len(self.word)):
+        if char == self.word[idx]:
+            yield idx
+
+# in the game loop
+try:
+    if guess not in self.alphabet:
+        raise AttributeError # not a letter
+    self.PlaceGuess(guess)
+
+except NameError:
+    self.timerToRenderWrongLetterErrorMessageAndLetter = [120, guess] # 2s cah 60FPS
+
+except AttributeError:
+    self.timerToRenderInvalidGuessMessage = 120 # 2s still
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Plein écran à n'importe quelle résolution</b></p>
+    <p>
+        Tout est dessiné sur une surface fixe de 1280x720, redimensionnée à la taille réelle de l'écran à la fin de chaque frame.
+        La logique du jeu n'a jamais à se soucier de la résolution du moniteur : seule la position de la souris doit être reconvertie dans les coordonnées fixes.
+    </p>
+</div>
+
+<div><pre><code class="language-python">
+def AdjustPos(self,mouse_XY : tuple[int,int]):
+    # if im at (200,200) on my screen it may be (380,500) in computation coordinates due to resizing
+    x, y = mouse_XY
+    x /= (self.sizedDimension[0] / self.W)
+    y /= (self.sizedDimension[1] / self.H)
+    return x,y
+
+def Draw(self): # render
+    self.window = pg.transform.scale(self.window, (self.sizedDimension)) # resize fixed size display to actual dimensions
+    self.display.blit(self.window, (0, 0)) # blit it on the actual screen
+    pg.display.update() # render
+    self.NewDisplay() # new fixed size display
+</code></pre></div>
+
+<div class="project-text">
+    <p><b>Ce que ce projet m'a appris</b></p>
+    <p>
+        Ce projet m'a fait découvrir le style de Python : typage dynamique avec annotations de type, compréhensions de listes et de dictionnaires,
+        générateurs, f-strings, exceptions, et le point d'entrée if __name__ == "__main__".
+    </p>
+    <p>
+        Avec le recul, je définirais mes propres classes d'exception au lieu de réutiliser NameError et AttributeError pour les règles du jeu,
+        et je chargerais la liste de mots une seule fois au lieu de relire le fichier à chaque nouveau mot.
+    </p>
+</div>
+
+</section>
